@@ -25,6 +25,7 @@ export default function useInterview(serverUrl) {
   const [aiQuestion, setAiQuestion] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState(null);
+  const [sessionStats, setSessionStats] = useState(null);
 
   // Refs for service instances
   const speechRef = useRef(null);
@@ -33,6 +34,7 @@ export default function useInterview(serverUrl) {
   const trackerRef = useRef(null);
   const socketRef = useRef(null);
   const deviceRef = useRef(null);
+  const perfCheckRef = useRef(null);
 
   /**
    * Step 1: Check device capabilities.
@@ -86,10 +88,10 @@ export default function useInterview(serverUrl) {
       // --- Microphone stream ---
       const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      // --- VAD ---
+      // --- VAD (pass degraded flag for fftSize 256) ---
       const vad = new VoiceActivityDetection();
       vadRef.current = vad;
-      await vad.init(audioStream);
+      await vad.init(audioStream, shouldDegrade);
       vad.onSpeechStart = () => setIsSpeaking(true);
       vad.onSpeechEnd = () => setIsSpeaking(false);
       vad.onEnergyLevel = (energy) => setEnergyLevel(energy);
@@ -133,10 +135,19 @@ export default function useInterview(serverUrl) {
       const tracker = new BrowserActivityTracker();
       trackerRef.current = tracker;
       tracker.onEvent = (evt) => {
-        setMonitoringEvents((prev) => [...prev, evt]);
-        socket.sendMonitoringEvent(evt);
+        // Cap React state events to last 50 (UI only needs recent)
+        setMonitoringEvents((prev) => [...prev.slice(-49), evt]);
+        socket.sendMonitoringEvent(evt); // Goes through batch buffer
       };
       tracker.start();
+
+      // --- Mid-session performance check (every 30s) ---
+      perfCheckRef.current = setInterval(() => {
+        const webcamStats = webcamRef.current?.getStats();
+        const vadStats = vadRef.current?.getStats();
+        const trackerSummary = trackerRef.current?.getSummary();
+        setSessionStats({ webcam: webcamStats, vad: vadStats, tracker: trackerSummary });
+      }, 30000);
 
     } catch (err) {
       setError('Failed to start interview: ' + err.message);
@@ -148,11 +159,21 @@ export default function useInterview(serverUrl) {
    * Step 3: End the interview session (cleanup all services).
    */
   const endInterview = useCallback(() => {
+    if (perfCheckRef.current) {
+      clearInterval(perfCheckRef.current);
+      perfCheckRef.current = null;
+    }
     speechRef.current?.stop();
     vadRef.current?.destroy();
     webcamRef.current?.destroy();
     trackerRef.current?.stop();
     socketRef.current?.disconnect();
+
+    // Capture final stats
+    setSessionStats({
+      vad: vadRef.current?.getStats?.(),
+      tracker: trackerRef.current?.getSummary?.(),
+    });
 
     setPhase('ended');
   }, []);
@@ -160,6 +181,7 @@ export default function useInterview(serverUrl) {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      if (perfCheckRef.current) clearInterval(perfCheckRef.current);
       speechRef.current?.stop();
       vadRef.current?.destroy();
       webcamRef.current?.destroy();
@@ -181,6 +203,7 @@ export default function useInterview(serverUrl) {
     aiQuestion,
     isConnected,
     error,
+    sessionStats,
 
     // Actions
     checkDevice,

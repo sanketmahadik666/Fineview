@@ -1,24 +1,22 @@
 /**
- * WebcamMonitor Service
+ * WebcamMonitor Service — v2 (Production-Grade)
  * 
- * Handles candidate monitoring via the webcam using MediaPipe's
- * Face Detection solution. Detects:
- *   - Face presence / absence
- *   - Multiple faces (integrity violation)
- *   - Basic gaze direction (looking away)
+ * v2 Upgrades (from Use-Case Strategy Matrix):
+ *   ✅ Web Worker offloading — frame analysis runs off main thread
+ *   ✅ Transferable ArrayBuffer — zero-copy pixel data transfer
+ *   ✅ Event log cap (500 max) — prevents memory leak
+ *   ✅ Frame timing metrics — tracks actual vs target fps
+ *   ✅ Only sends state CHANGES to server (not every frame)
  * 
- * Per the Adaptive-Hybrid Architecture (PRD 3.2.1):
- *   - On capable devices: runs locally at full frame rate
- *   - On low-end devices: degrades to lower polling frequency
- * 
- * Monitoring Flow (PRD 3.1.4):
- *   Candidate action → System records event → Behavior score updated
+ * Processing: Edge (client-side), Worker thread
+ * INP impact: Zero — all heavy work runs in Worker
  */
 
 class WebcamMonitor {
   constructor(options = {}) {
-    this.pollInterval = options.pollInterval || 1000; // ms between checks
-    this.degradedPollInterval = options.degradedPollInterval || 5000; // low-end mode
+    this.pollInterval = options.pollInterval || 1000;
+    this.degradedPollInterval = options.degradedPollInterval || 5000;
+    this.maxEvents = options.maxEvents || 500;
     this.isDegraded = false;
 
     this.videoElement = null;
@@ -27,31 +25,52 @@ class WebcamMonitor {
     this.mediaStream = null;
     this.isActive = false;
     this._intervalId = null;
+    this._worker = null;
 
     // State
     this.faceDetected = false;
     this.faceCount = 0;
-    this.lastFrameTime = 0;
+    this.isLookingAway = false;
 
-    // Event log
+    // Performance metrics
+    this._frameCount = 0;
+    this._startTime = 0;
+
+    // Event log (capped)
     this.events = [];
 
     // Callbacks
-    this.onFaceDetected = null;      // (count: number) => {}
-    this.onFaceLost = null;          // () => {}
-    this.onMultipleFaces = null;     // (count: number) => {}
-    this.onMonitoringEvent = null;   // (event: object) => {}
+    this.onFaceDetected = null;
+    this.onFaceLost = null;
+    this.onMultipleFaces = null;
+    this.onMonitoringEvent = null;
   }
 
   /**
-   * Initialize with a video element and optional canvas for processing.
-   * @param {HTMLVideoElement} videoEl
-   * @param {HTMLCanvasElement} canvasEl - hidden canvas for frame analysis
+   * Initialize with video/canvas elements.
+   * Spawns the Web Worker for off-thread analysis.
    */
   async init(videoEl, canvasEl) {
     this.videoElement = videoEl;
     this.canvasElement = canvasEl;
-    this.canvasCtx = canvasEl.getContext('2d');
+    this.canvasCtx = canvasEl.getContext('2d', { willReadFrequently: true });
+
+    // Spawn dedicated worker (ref: MDN Web Workers)
+    try {
+      this._worker = new Worker(
+        new URL('./webcamWorker.js', import.meta.url),
+        { type: 'module' }
+      );
+      this._worker.onmessage = (e) => this._handleWorkerResult(e.data);
+      this._worker.onerror = (err) => {
+        console.error('[WebcamMonitor] Worker error:', err);
+        // Fallback: run on main thread if worker fails
+        this._worker = null;
+      };
+    } catch (err) {
+      console.warn('[WebcamMonitor] Worker not supported, using main thread fallback');
+      this._worker = null;
+    }
 
     try {
       this.mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -74,102 +93,136 @@ class WebcamMonitor {
   start() {
     if (!this.mediaStream || this.isActive) return;
     this.isActive = true;
+    this._frameCount = 0;
+    this._startTime = Date.now();
 
-    const interval = this.isDegraded
-      ? this.degradedPollInterval
-      : this.pollInterval;
-
-    this._intervalId = setInterval(() => this._analyzeFrame(), interval);
+    const interval = this.isDegraded ? this.degradedPollInterval : this.pollInterval;
+    this._intervalId = setInterval(() => this._captureAndAnalyze(), interval);
     this._logEvent('monitoring_started', { degraded: this.isDegraded });
   }
 
-  /**
-   * Stop monitoring.
-   */
   stop() {
     this.isActive = false;
     if (this._intervalId) {
       clearInterval(this._intervalId);
       this._intervalId = null;
     }
-    this._logEvent('monitoring_stopped', {});
+    this._logEvent('monitoring_stopped', {
+      framesAnalyzed: this._frameCount,
+      duration: Date.now() - this._startTime,
+    });
   }
 
-  /**
-   * Switch to degraded mode (lower polling frequency).
-   * Called by the adaptive degradation system when high CPU usage is detected.
-   */
   enableDegradedMode() {
+    if (this.isDegraded) return;
     this.isDegraded = true;
-    if (this.isActive) {
-      this.stop();
-      this.start(); // Restart with degraded interval
-    }
+    if (this.isActive) { this.stop(); this.start(); }
     this._logEvent('degraded_mode_enabled', {});
   }
 
-  /**
-   * Return to full monitoring mode.
-   */
   disableDegradedMode() {
+    if (!this.isDegraded) return;
     this.isDegraded = false;
-    if (this.isActive) {
-      this.stop();
-      this.start();
-    }
+    if (this.isActive) { this.stop(); this.start(); }
     this._logEvent('degraded_mode_disabled', {});
   }
 
-  /**
-   * Destroy and release all resources.
-   */
   destroy() {
     this.stop();
+    if (this._worker) {
+      this._worker.terminate();
+      this._worker = null;
+    }
     if (this.mediaStream) {
-      this.mediaStream.getTracks().forEach((track) => track.stop());
+      this.mediaStream.getTracks().forEach((t) => t.stop());
       this.mediaStream = null;
     }
   }
 
-  /**
-   * Get all recorded monitoring events.
-   */
   getEvents() {
     return [...this.events];
   }
 
+  getStats() {
+    const elapsed = (Date.now() - this._startTime) / 1000;
+    return {
+      framesAnalyzed: this._frameCount,
+      actualFps: elapsed > 0 ? (this._frameCount / elapsed).toFixed(2) : 0,
+      targetFps: this.isDegraded ? 0.2 : 1,
+      isDegraded: this.isDegraded,
+      faceDetected: this.faceDetected,
+      eventCount: this.events.length,
+    };
+  }
+
+  // --- Internal ---
+
   /**
-   * Analyze a single video frame for face detection.
-   * 
-   * NOTE: This is a simplified brightness/skin-tone heuristic.
-   * In production, replace this with MediaPipe FaceDetection for
-   * accurate multi-face detection and gaze estimation.
+   * Capture frame and send to Worker via Transferable ArrayBuffer.
+   * Main thread cost: only drawImage + getImageData (~1ms).
+   * Analysis cost: ZERO on main thread (runs in worker).
    */
-  _analyzeFrame() {
+  _captureAndAnalyze() {
     if (!this.videoElement || this.videoElement.readyState < 2) return;
 
     const w = this.canvasElement.width;
     const h = this.canvasElement.height;
     this.canvasCtx.drawImage(this.videoElement, 0, 0, w, h);
     const imageData = this.canvasCtx.getImageData(0, 0, w, h);
-    const data = imageData.data;
 
-    // Simple face-presence heuristic: detect skin-tone pixels in center region
+    this._frameCount++;
+
+    if (this._worker) {
+      // Send to worker via Transferable (zero-copy)
+      const buffer = imageData.data.buffer;
+      this._worker.postMessage(
+        { buffer, width: w, height: h },
+        [buffer]  // Transfer ownership — zero-copy!
+      );
+    } else {
+      // Fallback: main thread analysis
+      this._analyzeOnMainThread(imageData.data, w, h);
+    }
+  }
+
+  /**
+   * Handle result from Worker.
+   */
+  _handleWorkerResult(data) {
+    if (data.type === 'init_success') {
+      console.log('[WebcamMonitor] MediaPipe initialized off-thread.');
+      return;
+    }
+    if (data.type === 'init_error') {
+      console.error('[WebcamMonitor] MediaPipe failed:', data.error);
+      return;
+    }
+    
+    if (data.type === 'analysis_result') {
+      const { faceDetected, faceCount, isLookingAway } = data;
+      this._updateFaceState(faceDetected, faceCount, isLookingAway);
+    }
+  }
+
+  /**
+   * Fallback: run analysis on main thread (if Worker unavailable).
+   */
+  _analyzeOnMainThread(data, w, h) {
     const centerX = w / 2;
     const centerY = h / 2;
     const regionSize = Math.min(w, h) * 0.3;
     let skinPixels = 0;
     let totalPixels = 0;
 
-    for (let y = Math.floor(centerY - regionSize); y < centerY + regionSize; y++) {
-      for (let x = Math.floor(centerX - regionSize); x < centerX + regionSize; x++) {
-        if (x < 0 || x >= w || y < 0 || y >= h) continue;
-        const idx = (y * w + x) * 4;
-        const r = data[idx];
-        const g = data[idx + 1];
-        const b = data[idx + 2];
+    const startY = Math.max(0, Math.floor(centerY - regionSize));
+    const endY = Math.min(h, Math.floor(centerY + regionSize));
+    const startX = Math.max(0, Math.floor(centerX - regionSize));
+    const endX = Math.min(w, Math.floor(centerX + regionSize));
 
-        // Basic skin-tone detection (works for a range of skin tones)
+    for (let y = startY; y < endY; y++) {
+      for (let x = startX; x < endX; x++) {
+        const idx = (y * w + x) * 4;
+        const r = data[idx], g = data[idx + 1], b = data[idx + 2];
         if (r > 95 && g > 40 && b > 20 && r > g && r > b &&
             Math.abs(r - g) > 15 && r - b > 15) {
           skinPixels++;
@@ -179,31 +232,59 @@ class WebcamMonitor {
     }
 
     const skinRatio = totalPixels > 0 ? skinPixels / totalPixels : 0;
-    const facePresent = skinRatio > 0.15;
+    this._updateFaceState(skinRatio > 0.15, skinRatio > 0.15 ? 1 : 0);
+  }
 
-    if (facePresent && !this.faceDetected) {
+  /**
+   * Update face state — only fires callbacks on STATE CHANGES.
+   * This means we only send events to the server when something changes,
+   * not every frame (bandwidth optimization from strategy matrix).
+   */
+  _updateFaceState(detected, count, lookingAway = false) {
+    // Face Presences
+    if (detected && !this.faceDetected) {
       this.faceDetected = true;
-      this.faceCount = 1;
-      this._logEvent('face_detected', { count: 1 });
-      if (this.onFaceDetected) this.onFaceDetected(1);
-    } else if (!facePresent && this.faceDetected) {
+      this.faceCount = count;
+      this._logEvent('face_detected', { count });
+      if (this.onFaceDetected) this.onFaceDetected(count);
+    } else if (!detected && this.faceDetected) {
       this.faceDetected = false;
       this.faceCount = 0;
       this._logEvent('face_lost', {});
       if (this.onFaceLost) this.onFaceLost();
     }
+
+    // Multiple faces trigger
+    if (detected && count > 1 && this.faceCount !== count) {
+      this.faceCount = count;
+      this._logEvent('multiple_faces', { count });
+      if (this.onMultipleFaces) this.onMultipleFaces(count);
+    } else if (detected && count === 1 && this.faceCount > 1) {
+      this.faceCount = 1; // returned to normal
+    }
+
+    // Gaze tracking
+    if (detected && lookingAway && !this.isLookingAway) {
+      this.isLookingAway = true;
+      this._logEvent('looking_away', { message: 'Candidate appears to be looking away from the screen' });
+    } else if (detected && !lookingAway && this.isLookingAway) {
+      this.isLookingAway = false;
+      this._logEvent('gaze_returned', {});
+    }
   }
 
   /**
-   * Log a monitoring event with timestamp.
+   * Log event with cap to prevent memory leak.
    */
   _logEvent(type, data) {
-    const event = {
-      type,
-      timestamp: Date.now(),
-      ...data,
-    };
+    const event = { type, timestamp: Date.now(), ...data };
+
+    // Cap events to prevent unbounded growth
+    if (this.events.length >= this.maxEvents) {
+      this.events.shift(); // Remove oldest
+    }
     this.events.push(event);
+
     if (this.onMonitoringEvent) this.onMonitoringEvent(event);
   }
 }
