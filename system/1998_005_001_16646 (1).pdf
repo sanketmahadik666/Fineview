@@ -1,0 +1,264 @@
+# Fineview: Use-Case Strategy Matrix & LLD Patterns
+
+Every technology mapped to **where it's used**, **why it's the best choice**, **what the tradeoffs are**, and the **Low-Level Design** pattern to implement it.
+
+---
+
+## Use Case 1: Real-Time Speech Transcription
+
+**Objective:** Convert candidate speech to text with < 500ms latency
+
+| Method | Latency | CPU Cost | Accuracy | Offline? |
+|---|---|---|---|---|
+| **Web Speech API** ✅ | ~300ms | Zero (browser-native) | Good | ❌ |
+| Whisper.cpp (WASM) | ~800ms | Very High | Excellent | ✅ |
+| Server-side Whisper | ~1.5s (network) | Zero (client) | Excellent | ❌ |
+
+**Winner: Web Speech API** — Zero client CPU, instant availability, no model download.
+
+**Tradeoff accepted:** No offline support. Acceptable because interviews require network connectivity anyway (for WebSocket communication to server).
+
+```mermaid
+sequenceDiagram
+    participant Mic
+    participant SpeechCapture
+    participant WebSocket
+    participant Server
+    Mic->>SpeechCapture: Audio stream
+    SpeechCapture->>SpeechCapture: Browser STT (internal)
+    SpeechCapture->>WebSocket: Final transcript text (~2KB/min)
+    WebSocket->>Server: Batched every 3s
+```
+
+---
+
+## Use Case 2: Voice Activity Detection (Speaking vs Silent)
+
+**Objective:** Detect when candidate is speaking to avoid sending silence
+
+| Method | Latency | CPU Cost | Bundle Size | Thread |
+|---|---|---|---|---|
+| **RMS Energy (Web Audio)** ✅ | Real-time | ~0.02ms/frame | 0 KB | Main |
+| Silero VAD (ONNX/WASM) | Real-time | ~5ms/frame | ~2 MB | Worker |
+| AudioWorklet + RMS | Real-time | ~0.01ms/frame | 0 KB | Audio Thread |
+
+**Winner: RMS Energy via AnalyserNode** (now) → **AudioWorklet** (production)
+
+**Tradeoff matrix:**
+
+| Factor | RMS (current) | AudioWorklet (future) | Silero ONNX |
+|---|---|---|---|
+| Main thread impact | Minimal (0.02ms) | **Zero** | Must use Worker |
+| Implementation complexity | Low | Medium | High |
+| False positive rate | Higher | Higher | Very Low |
+| Bundle size overhead | None | None | +2MB download |
+
+**LLD Pattern — Current (rAF + AnalyserNode):**
+```
+AudioContext
+  └── MediaStreamSource (mic)
+       └── AnalyserNode (fftSize: 512)
+            └── requestAnimationFrame loop
+                 └── getFloatTimeDomainData → RMS → threshold check
+```
+
+**LLD Pattern — Production (AudioWorklet):**
+```
+AudioContext
+  └── MediaStreamSource (mic)
+       └── AudioWorkletNode('vad-processor')
+            └── AudioWorkletProcessor.process()
+                 └── RMS on 128-sample blocks → port.postMessage()
+```
+
+**Why AudioWorklet > rAF for production:** rAF pauses in background tabs. AudioWorklet runs on a **dedicated audio rendering thread** — guaranteed real-time, unaffected by tab visibility or main thread jank.
+
+---
+
+## Use Case 3: Face Detection & Monitoring
+
+**Objective:** Detect face presence, absence, and multiple faces at 1fps
+
+| Method | Accuracy | CPU Cost | Thread | Setup |
+|---|---|---|---|---|
+| Skin-tone heuristic ✅ (current) | Low | ~2ms | Main | Zero |
+| **MediaPipe Face Detection** (target) | High | ~15ms | **Must use Worker** | ~5MB WASM |
+| TensorFlow.js BlazeFace | High | ~20ms | Worker | ~3MB |
+| Server-side (send frames) | Highest | Zero (client) | N/A | High bandwidth |
+
+**Winner: MediaPipe in Web Worker** (production) / **Skin-tone heuristic** (MVP)
+
+**Critical tradeoff — Why NOT server-side:**
+```
+Client frame → Server (300KB JPEG × 1fps × 100 users)
+= 30 MB/s server ingress = $$$$ and latency
+                    vs
+Client frame → Web Worker → JSON event (50 bytes)
+= 0.005 MB/s server ingress = practically free
+```
+
+**LLD Pattern — Web Worker Architecture:**
+```
+Main Thread                          Worker Thread
+┌──────────────────┐                ┌──────────────────┐
+│ WebcamMonitor    │                │ webcamWorker.js   │
+│                  │  Transferable  │                   │
+│ getImageData() ──┼──ArrayBuffer──►│ MediaPipe.detect()│
+│                  │                │    │               │
+│ updateState() ◄──┼──{faceCount}──│    └──► result     │
+└──────────────────┘   postMessage  └──────────────────┘
+```
+
+**Adaptive Degradation Decision:**
+```
+DeviceCapability.tier === 'high'   → 1 fps, full detection
+DeviceCapability.tier === 'medium' → 1 fps, full detection
+DeviceCapability.tier === 'low'    → 0.2 fps (every 5s), heuristic only
+```
+
+---
+
+## Use Case 4: Browser Activity Tracking
+
+**Objective:** Detect tab switches, inactivity, copy/paste in real-time
+
+| Method | Latency | CPU Cost | Reliability |
+|---|---|---|---|
+| **Page Visibility API** ✅ | Instant | Zero | Very High |
+| `window.blur/focus` | Instant | Zero | High |
+| Polling `document.hasFocus()` | Interval-based | Low | Medium |
+
+**Winner: All three combined** — layered detection for maximum reliability.
+
+**No tradeoffs needed** — all methods are event-driven with zero CPU cost. The only design decision is **event batching**:
+
+```
+Event occurs → Buffer locally (max 3 seconds)
+                  ↓
+Timer fires  → Batch → WebSocket.send()
+                  ↓
+Server       → MongoDB insertMany({ writeConcern: { w: 1 } })
+```
+
+**INP impact:** All our event handlers (copy, paste, contextmenu, visibilitychange) are < 1ms. Target INP < 200ms is easily met. ✅
+
+---
+
+## Use Case 5: Client ↔ Server Communication
+
+**Objective:** Real-time bidirectional messaging with auto-reconnect
+
+| Method | Bidirectional | Latency | Reconnect | Scaling |
+|---|---|---|---|---|
+| **WebSocket (native)** ✅ | Yes | ~5ms | Manual | Need sticky sessions |
+| Socket.IO | Yes | ~8ms | Automatic | Built-in rooms/namespaces |
+| SSE + POST | One-way stream | ~10ms | Automatic | Stateless |
+| HTTP Polling | Simulated | ~1000ms | N/A | Stateless |
+
+**Winner: Native WebSocket** (now) → **Socket.IO** (production)
+
+**Tradeoff:**
+
+| Factor | Native WebSocket | Socket.IO |
+|---|---|---|
+| Bundle size | 0 KB | +40 KB |
+| Auto-reconnect | We built it manually | Built-in |
+| Rooms/namespaces | Manual | Built-in (interviewer rooms) |
+| Fallback to polling | No | Yes (critical for corporate firewalls) |
+| Server complexity | Lower | Slightly higher |
+
+**LLD Pattern — Message Protocol:**
+```javascript
+// Every message follows this structure:
+{
+  type: string,      // 'transcript' | 'monitoring_event' | 'ai_question'
+  payload: object,   // The actual data
+  timestamp: number  // Client-side timestamp
+}
+```
+
+**Batching Strategy (bandwidth SLO: < 1.5 Mbps):**
+```
+Transcripts:     Send per final segment (~every 5-10s)
+Monitoring:      Batch every 3 seconds
+Face detection:  Send only state CHANGES (detected → lost)
+VAD energy:      Do NOT send — client-only metric
+```
+
+---
+
+## Use Case 6: Server Scaling for Concurrency
+
+**Objective:** Handle 20–100+ simultaneous interview sessions
+
+| Method | Max Connections/Node | Scaling Model | Complexity |
+|---|---|---|---|
+| Single Node.js process | ~1000 WS | Vertical only | Simple |
+| **Node.js Cluster** ✅ | ~1000 × numCPUs | Horizontal (per machine) | Medium |
+| PM2 (process manager) | Same as Cluster | Managed Cluster | Low |
+| Kubernetes pods | Unlimited | Horizontal (across machines) | High |
+
+**Winner: Node.js Cluster** (Phase 3) → **Kubernetes** (Phase 5 production)
+
+**LLD Pattern — Cluster + WebSocket:**
+```
+                     ┌─────────────────────┐
+ Nginx (ip_hash) ──► │ Primary Process     │
+                     │ (no app logic)      │
+                     └──┬──────┬──────┬────┘
+                        │      │      │
+                   fork()  fork()  fork()
+                        │      │      │
+                     ┌──┴──┐┌──┴──┐┌──┴──┐
+                     │ W1  ││ W2  ││ W3  │
+                     │ App ││ App ││ App │
+                     │ +WS ││ +WS ││ +WS │
+                     └──┬──┘└──┬──┘└──┬──┘
+                        │      │      │
+                     ┌──┴──────┴──────┴──┐
+                     │ MongoDB (shared)  │
+                     │ Redis (sessions)  │
+                     └───────────────────┘
+```
+
+**Why `ip_hash` in Nginx:** WebSocket is a long-lived connection. Round-robin would send the upgrade request to a different worker than the initial HTTP handshake. `ip_hash` ensures the same client always reaches the same worker.
+
+---
+
+## Use Case 7: Data Persistence (Durability vs Speed)
+
+**Objective:** Store interview data with appropriate durability guarantees
+
+| Data Type | Write Frequency | Loss Tolerance | Write Concern |
+|---|---|---|---|
+| Monitoring events | ~10/sec per session | Some loss OK | `w: 1, j: false` |
+| Transcript segments | ~0.2/sec per session | Minimal | `w: 1, j: true` |
+| **Final evaluation** | Once per session | **Zero loss** | `w: "majority", j: true` |
+| Session metadata | Once per session | Zero loss | `w: "majority"` |
+
+**LLD Pattern — Tiered Write Strategy:**
+```
+┌─────────────────┐        ┌─────────────────┐
+│ Hot Path         │        │ Cold Path        │
+│ (during session) │        │ (session end)    │
+│                  │        │                  │
+│ events: w:1      │        │ evaluation:      │
+│ transcripts: w:1 │───────►│   w:"majority"   │
+│ (speed first)    │ flush  │   j:true         │
+│                  │        │ (durability first)│
+└─────────────────┘        └─────────────────┘
+```
+
+---
+
+## Summary Decision Matrix
+
+| Use Case | Current Method | Production Method | Key Tradeoff |
+|---|---|---|---|
+| Speech → Text | Web Speech API | Web Speech API | No offline (acceptable) |
+| Voice Activity | rAF + AnalyserNode | AudioWorklet | Complexity ↑, reliability ↑↑ |
+| Face Detection | Skin-tone heuristic | MediaPipe in Worker | +5MB download, accuracy ↑↑↑ |
+| Browser Tracking | Visibility + Blur | Same | No tradeoff needed |
+| Communication | Native WebSocket | Socket.IO | +40KB, reconnect ↑, rooms ↑ |
+| Server Scaling | Single process | Cluster → K8s | Complexity ↑, capacity ↑↑↑ |
+| Data Storage | — | MongoDB tiered writes | Speed vs durability per data type |
