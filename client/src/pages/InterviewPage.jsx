@@ -13,6 +13,8 @@ export default function InterviewPage() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
+  const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
+
   const {
     phase,
     deviceInfo,
@@ -25,10 +27,12 @@ export default function InterviewPage() {
     aiQuestion,
     isConnected,
     error,
+    speechSupported,
+    speechSupportReason,
     checkDevice,
     startInterview,
     endInterview,
-  } = useInterview('ws://localhost:3001');
+  } = useInterview(WS_URL);
 
   const handleStart = async () => {
     if (phase === 'idle') {
@@ -127,7 +131,18 @@ export default function InterviewPage() {
               </div>
             )}
 
-            <button className="btn-primary" onClick={handleBeginInterview}>
+            {!speechSupported && (
+              <div className="error-banner">
+                {speechSupportReason ||
+                  'Your browser does not support the required speech recognition features. Please try a modern Chromium-based browser.'}
+              </div>
+            )}
+
+            <button
+              className="btn-primary"
+              onClick={!speechSupported ? undefined : handleBeginInterview}
+              disabled={!speechSupported}
+            >
               Begin Interview
             </button>
           </div>

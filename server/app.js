@@ -28,7 +28,16 @@ export async function startWorker() {
   const port = process.env.PORT || 3001;
 
   // Middleware
-  app.use(cors());
+  const corsOrigin = process.env.CORS_ORIGIN || '*';
+  app.use(
+    cors(
+      corsOrigin === '*'
+        ? undefined
+        : {
+            origin: corsOrigin,
+          }
+    )
+  );
   app.use(express.json());
 
   // REST Routing
@@ -58,56 +67,109 @@ export async function startWorker() {
 
         const sessionId = ws.sessionId;
 
+        const ensureString = (val) => (typeof val === 'string' ? val : '');
+        const ensureBoolean = (val) => (typeof val === 'boolean' ? val : false);
+
         // Message Routing
         if (parsedMessage.type === 'transcript') {
-          if (sessionId) {
-            Transcript.create({
-              sessionId,
-              text: parsedMessage.payload.text,
-              isFinal: parsedMessage.payload.isFinal,
-              timestamp: new Date(parsedMessage.timestamp),
-            }).catch(e => console.error(e));
+          const payload = parsedMessage.payload || {};
+          const text = ensureString(payload.text);
+          const isFinal = ensureBoolean(payload.isFinal);
+          if (!sessionId || !text) {
+            console.warn('[Worker] Invalid transcript payload or missing sessionId.');
+            return;
+          }
 
-            // Pass to AI Engine for turn-taking logic
-            interviewEngine.handleCandidateResponse(sessionId, ws, parsedMessage.payload.text, parsedMessage.payload.isFinal);
-          }
-          console.log(`[Worker ${process.pid}] Received transcript: ${parsedMessage.payload.text}`);
+          Transcript.create({
+            sessionId,
+            text,
+            isFinal,
+            timestamp: parsedMessage.timestamp
+              ? new Date(parsedMessage.timestamp)
+              : new Date(),
+          }).catch(e => console.error(e));
+
+          // Pass to AI Engine for turn-taking logic (only on final segments)
+          interviewEngine.handleCandidateResponse(sessionId, ws, text, isFinal);
+          console.log(`[Worker ${process.pid}] Received transcript: ${text}`);
         } else if (parsedMessage.type === 'monitoring_event') {
-          if (sessionId) {
-            MonitoringEvent.create({
-              sessionId,
-              type: parsedMessage.payload.type,
-              payload: parsedMessage.payload,
-              clientTimestamp: parsedMessage.timestamp
-            }).catch(e => console.error(e));
+          const payload = parsedMessage.payload || {};
+          const eventType = ensureString(payload.type);
+          if (!sessionId || !eventType) {
+            console.warn('[Worker] Invalid monitoring_event payload or missing sessionId.');
+            return;
           }
-          console.log(`[Worker ${process.pid}] Received monitoring event: ${parsedMessage.payload.type}`);
+
+          MonitoringEvent.create({
+            sessionId,
+            type: eventType,
+            payload,
+            clientTimestamp: parsedMessage.timestamp || payload.timestamp,
+          }).catch(e => console.error(e));
+          console.log(`[Worker ${process.pid}] Received monitoring event: ${eventType}`);
         } else if (parsedMessage.type === 'monitoring_batch') {
-          if (sessionId && parsedMessage.payload.events) {
-            const eventsToInsert = parsedMessage.payload.events.map(e => ({
-              sessionId,
-              type: e.type,
-              payload: e,
-              clientTimestamp: e.timestamp
-            }));
-            // Insert many efficiently 
-            MonitoringEvent.insertMany(eventsToInsert).catch(e => console.error(e));
+          const payload = parsedMessage.payload || {};
+          const events = Array.isArray(payload.events) ? payload.events : [];
+          if (sessionId && events.length > 0) {
+            const eventsToInsert = events
+              .filter(e => e && typeof e.type === 'string')
+              .map(e => ({
+                sessionId,
+                type: e.type,
+                payload: e,
+                clientTimestamp: e.timestamp,
+              }));
+            if (eventsToInsert.length > 0) {
+              MonitoringEvent.insertMany(eventsToInsert).catch(e => console.error(e));
+            }
           }
-          console.log(`[Worker ${process.pid}] Received monitoring batch of ${parsedMessage.payload.count} events.`);
+          console.log(
+            `[Worker ${process.pid}] Received monitoring batch of ${payload.count || 0} events.`
+          );
         } else if (parsedMessage.type === 'start_interview') {
-          // Creating a new session or mapping existing
+          const payload = parsedMessage.payload || {};
+          const name = ensureString(payload.name) || 'Candidate';
+          const role = ensureString(payload.role) || 'Unspecified';
+
           InterviewSession.create({
-            candidateName: parsedMessage.payload.name || 'Candidate',
-            jobRole: parsedMessage.payload.role || 'Unspecified',
+            candidateName: name,
+            jobRole: role,
             status: 'in-progress',
             startTime: new Date(),
-            deviceInfo: parsedMessage.payload.deviceInfo
-          }).then(doc => {
-            ws.sessionId = doc._id;
-            console.log(`[Worker ${process.pid}] Session started: ${ws.sessionId}`);
-            // Let the AI engine orchestrate the questions
-            interviewEngine.startSession(doc._id, ws);
+            deviceInfo: payload.deviceInfo || {},
+          })
+            .then(doc => {
+              ws.sessionId = doc._id;
+              console.log(`[Worker ${process.pid}] Session started: ${ws.sessionId}`);
+              // Let the AI engine orchestrate the questions
+              interviewEngine.startSession(doc._id, ws).catch(err => {
+                console.error('[Worker] Failed to start interview session via InterviewEngine:', err);
+              });
+            })
+            .catch(e => console.error(e));
+        } else if (parsedMessage.type === 'end_interview') {
+          const payload = parsedMessage.payload || {};
+          const reason = ensureString(payload.reason) || 'unknown';
+          if (!sessionId) {
+            console.warn('[Worker] end_interview received without a sessionId.');
+            return;
+          }
+
+          const update = {
+            endTime: new Date(),
+          };
+
+          if (reason === 'candidate_ended') {
+            update.status = 'aborted';
+          }
+
+          InterviewSession.findByIdAndUpdate(sessionId, update, {
+            writeConcern: { w: 'majority', wtimeout: 5000 },
           }).catch(e => console.error(e));
+
+          console.log(
+            `[Worker ${process.pid}] end_interview received for session ${sessionId} (reason=${reason}).`
+          );
         } else {
           console.log(`[Worker ${process.pid}] Received unknown message type: ${parsedMessage.type}`);
         }

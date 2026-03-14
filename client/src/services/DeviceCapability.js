@@ -132,6 +132,11 @@ class DeviceCapability {
       return 'unsupported';
     }
 
+    // SpeechRecognition is required for the current UX (no text fallback yet)
+    if (!browser.speechRecognition) {
+      return 'unsupported';
+    }
+
     // Must have permissions
     if (!permissions.microphone || !permissions.camera) {
       return 'unsupported';

@@ -19,6 +19,7 @@ class SpeechCapture {
     this.onError = null; // callback: (error) => {}
     this.onStatusChange = null; // callback: (isListening) => {}
     this._supported = false;
+    this._unsupportedReason = '';
 
     this._init();
   }
@@ -28,10 +29,10 @@ class SpeechCapture {
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      console.warn(
-        "[SpeechCapture] Web Speech API not supported in this browser.",
-      );
+      const msg = "Web Speech API not supported in this browser.";
+      console.warn("[SpeechCapture]", msg);
       this._supported = false;
+      this._unsupportedReason = msg;
       return;
     }
 
@@ -85,14 +86,18 @@ class SpeechCapture {
     return this._supported;
   }
 
+  get unsupportedReason() {
+    return this._supported ? '' : this._unsupportedReason;
+  }
+
   start() {
     if (!this._supported || this.isListening) return;
     try {
       this.recognition.start();
       this.isListening = true;
       if (this.onStatusChange) this.onStatusChange(true);
-    } catch (err) {
-      console.error("[SpeechCapture] Failed to start:", err);
+    } catch {
+      // Start failures are surfaced via onerror handler.
     }
   }
 
@@ -117,7 +122,7 @@ class SpeechCapture {
     if (this.isListening && this._supported) {
       try {
         this.recognition.start();
-      } catch (err) {
+      } catch {
         // Already running, ignore
       }
     }

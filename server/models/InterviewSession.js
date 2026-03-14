@@ -28,6 +28,7 @@ const InterviewSessionSchema = new mongoose.Schema(
       conceptualUnderstanding: { type: Number, min: 0, max: 100 },
       problemSolving: { type: Number, min: 0, max: 100 },
       communication: { type: Number, min: 0, max: 100 },
+      responseCompleteness: { type: Number, min: 0, max: 100 },
       overallScore: { type: Number, min: 0, max: 100 },
     },
     aiFeedback: { type: String }

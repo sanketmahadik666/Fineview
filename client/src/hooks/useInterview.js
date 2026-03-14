@@ -26,6 +26,8 @@ export default function useInterview(serverUrl) {
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState(null);
   const [sessionStats, setSessionStats] = useState(null);
+  const [speechSupported, setSpeechSupported] = useState(true);
+  const [speechSupportReason, setSpeechSupportReason] = useState('');
 
   // Refs for service instances
   const speechRef = useRef(null);
@@ -48,6 +50,17 @@ export default function useInterview(serverUrl) {
       const results = await device.checkAll();
       deviceRef.current = device;
       setDeviceInfo(results);
+
+      // Reflect speech support in hook state for UI
+      if (!results.browser?.speechRecognition) {
+        setSpeechSupported(false);
+        setSpeechSupportReason(
+          'Your browser does not support the Web Speech API required for voice responses.'
+        );
+      } else {
+        setSpeechSupported(true);
+        setSpeechSupportReason('');
+      }
 
       if (results.overall === 'unsupported') {
         setError('Your device or browser does not meet the minimum requirements.');
@@ -75,6 +88,14 @@ export default function useInterview(serverUrl) {
     try {
       const shouldDegrade = deviceRef.current?.shouldDegrade();
 
+      // Guard: do not start if speech is not supported
+      if (!speechSupported) {
+        throw new Error(
+          speechSupportReason ||
+            'Speech recognition is not supported in this browser.'
+        );
+      }
+
       // --- WebSocket ---
       const socket = new SocketService(serverUrl);
       socketRef.current = socket;
@@ -85,11 +106,21 @@ export default function useInterview(serverUrl) {
       });
       socket.connect();
 
+      // Send start_interview message once socket is available
+      socket.send('start_interview', {
+        name: 'Candidate',
+        role: 'General Interview',
+        deviceInfo: deviceRef.current?.results || deviceInfo || {},
+      });
+
       // --- Microphone stream ---
       const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
       // --- VAD (pass degraded flag for fftSize 256) ---
-      const vad = new VoiceActivityDetection();
+      const vad = new VoiceActivityDetection({
+        threshold: shouldDegrade ? 0.025 : 0.015,
+        silenceDelay: shouldDegrade ? 1200 : 800,
+      });
       vadRef.current = vad;
       await vad.init(audioStream, shouldDegrade);
       vad.onSpeechStart = () => setIsSpeaking(true);
@@ -132,7 +163,10 @@ export default function useInterview(serverUrl) {
       }
 
       // --- Browser Activity Tracker ---
-      const tracker = new BrowserActivityTracker();
+      const tracker = new BrowserActivityTracker({
+        inactivityThreshold: shouldDegrade ? 45000 : 30000,
+        maxEvents: shouldDegrade ? 300 : 500,
+      });
       trackerRef.current = tracker;
       tracker.onEvent = (evt) => {
         // Cap React state events to last 50 (UI only needs recent)
@@ -159,6 +193,12 @@ export default function useInterview(serverUrl) {
    * Step 3: End the interview session (cleanup all services).
    */
   const endInterview = useCallback(() => {
+    // Notify server that the client ended the interview (if socket still alive)
+    if (socketRef.current) {
+      socketRef.current.send('end_interview', {
+        reason: 'candidate_ended',
+      });
+    }
     if (perfCheckRef.current) {
       clearInterval(perfCheckRef.current);
       perfCheckRef.current = null;
@@ -204,6 +244,8 @@ export default function useInterview(serverUrl) {
     isConnected,
     error,
     sessionStats,
+    speechSupported,
+    speechSupportReason,
 
     // Actions
     checkDevice,
