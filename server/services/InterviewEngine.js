@@ -98,7 +98,7 @@ class InterviewEngine {
         }, 1500);
       } else {
         // End of questions -> evaluate
-        this._triggerEvaluation(sessionId, ws);
+        this.triggerEvaluation(sessionId, ws);
       }
     }
   }
@@ -110,7 +110,13 @@ class InterviewEngine {
     }));
   }
 
-  async _triggerEvaluation(sessionId, ws) {
+  async triggerEvaluation(sessionId, ws) {
+    const key = sessionId.toString();
+    // If we've already cleaned up this session, avoid double evaluation
+    if (!this.sessionState.has(key)) {
+      console.log(`[InterviewEngine] triggerEvaluation called for unknown session: ${sessionId}`);
+      return;
+    }
     console.log(`[InterviewEngine] Triggering final evaluation for session: ${sessionId}`);
     
     ws.send(JSON.stringify({
@@ -195,7 +201,7 @@ class InterviewEngine {
     );
 
     // Clean up local tracking state
-    this.sessionState.delete(sessionId.toString());
+    this.sessionState.delete(key);
   }
 }
 

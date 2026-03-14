@@ -159,8 +159,14 @@ export async function startWorker() {
             endTime: new Date(),
           };
 
-          if (reason === 'candidate_ended') {
+          // For a normal candidate-initiated end, we trigger a best-effort evaluation
+          // and let the InterviewEngine set status to "completed".
+          if (reason !== 'candidate_ended') {
             update.status = 'aborted';
+          } else {
+            interviewEngine.triggerEvaluation(sessionId, ws).catch(err => {
+              console.error('[Worker] Failed to trigger evaluation on end_interview:', err);
+            });
           }
 
           InterviewSession.findByIdAndUpdate(sessionId, update, {
