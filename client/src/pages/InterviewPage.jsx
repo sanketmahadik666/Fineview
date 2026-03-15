@@ -13,7 +13,10 @@ export default function InterviewPage() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
-  const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
+  const WS_URL = import.meta.env.VITE_WS_URL || (() => {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${protocol}//${window.location.host}/ws`;
+  })();
 
   const {
     phase,
