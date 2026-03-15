@@ -3,7 +3,7 @@ import SpeechCapture from '../services/SpeechCapture';
 import VoiceActivityDetection from '../services/VoiceActivityDetection';
 import WebcamMonitor from '../services/WebcamMonitor';
 import BrowserActivityTracker from '../services/BrowserActivityTracker';
-import DeviceCapability from '../services/DeviceCapability';
+import DeviceCapability, { probeDevice } from '../services/DeviceCapability';
 import SocketService from '../services/SocketService';
 
 /**
@@ -28,6 +28,8 @@ export default function useInterview(serverUrl) {
   const [sessionStats, setSessionStats] = useState(null);
   const [speechSupported, setSpeechSupported] = useState(true);
   const [speechSupportReason, setSpeechSupportReason] = useState('');
+  const [deviceTier, setDeviceTier] = useState('HIGH');
+  const [moduleFlags, setModuleFlags] = useState(null);
 
   // Refs for service instances
   const speechRef = useRef(null);
@@ -46,6 +48,11 @@ export default function useInterview(serverUrl) {
     setError(null);
 
     try {
+      // Phase 1: spec-compliant DeviceCapabilityProbe
+      const probe = await probeDevice();
+      setDeviceTier(probe.tier);
+      setModuleFlags(probe.modules);
+
       const device = new DeviceCapability();
       const results = await device.checkAll();
       deviceRef.current = device;
@@ -134,7 +141,8 @@ export default function useInterview(serverUrl) {
       speech.onResult = (finalText, interim) => {
         setTranscript(finalText);
         setInterimText(interim);
-        // Send final transcript segments to server
+        // Phase 1: still using legacy transcript pipe; Phase 2 will
+        // map this to spec 'transcript:interim' / 'transcript:final'.
         if (finalText) {
           socket.sendTranscript(finalText, true);
         }
@@ -187,7 +195,7 @@ export default function useInterview(serverUrl) {
       setError('Failed to start interview: ' + err.message);
       setPhase('ready');
     }
-  }, [phase, serverUrl]);
+  }, [phase, serverUrl, speechSupported, speechSupportReason]);
 
   /**
    * Step 3: End the interview session (cleanup all services).

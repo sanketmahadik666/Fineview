@@ -13,7 +13,10 @@ export default function InterviewPage() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
-  const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
+  const WS_URL = import.meta.env.VITE_WS_URL || (() => {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${protocol}//${window.location.host}/ws`;
+  })();
 
   const {
     phase,
@@ -41,14 +44,14 @@ export default function InterviewPage() {
   };
 
   const handleBeginInterview = async () => {
-    if (phase === 'ready' && videoRef.current && canvasRef.current) {
+    if (phase === 'ready') {
       await startInterview(videoRef.current, canvasRef.current);
     }
   };
 
   return (
     <div className="interview-page">
-      {/* Hidden canvas for frame analysis */}
+      {/* Canvas always in DOM for frame analysis (hidden) */}
       <canvas
         ref={canvasRef}
         width={320}
@@ -63,9 +66,11 @@ export default function InterviewPage() {
           <span className="subtitle">AI Interview Platform</span>
         </div>
         <div className="header-right">
-          <span className={`connection-badge ${isConnected ? 'connected' : 'disconnected'}`}>
-            {isConnected ? '● Connected' : '○ Disconnected'}
-          </span>
+          {phase === 'active' && (
+            <span className={`connection-badge ${isConnected ? 'connected' : 'disconnected'}`}>
+              {isConnected ? '● Connected' : '○ Disconnected'}
+            </span>
+          )}
         </div>
       </header>
 
@@ -148,84 +153,88 @@ export default function InterviewPage() {
           </div>
         )}
 
-        {/* ACTIVE Phase */}
-        {phase === 'active' && (
-          <div className="phase-active-layout">
-            {/* Left: Video + Monitoring */}
-            <div className="panel-left">
-              <div className="video-container">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="webcam-video"
-                />
-                <div className="video-overlay">
-                  <span className={`face-indicator ${faceDetected ? 'detected' : 'lost'}`}>
-                    {faceDetected ? '👤 Face Detected' : '⚠ No Face'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Voice Activity Meter */}
-              <div className="vad-meter">
-                <div className="vad-label">
-                  {isSpeaking ? '🎙️ Speaking' : '🔇 Silent'}
-                </div>
-                <div className="vad-bar-track">
-                  <div
-                    className="vad-bar-fill"
-                    style={{ width: `${Math.min(energyLevel * 3000, 100)}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Monitoring Events */}
-              <div className="monitoring-panel">
-                <h4>Activity Log</h4>
-                <div className="event-list">
-                  {monitoringEvents.slice(-5).map((evt, i) => (
-                    <div key={i} className={`event-item event-${evt.type}`}>
-                      <span className="event-time">
-                        {new Date(evt.timestamp).toLocaleTimeString()}
-                      </span>
-                      <span className="event-type">{evt.type}</span>
-                    </div>
-                  ))}
-                  {monitoringEvents.length === 0 && (
-                    <div className="event-item event-empty">No events yet</div>
-                  )}
-                </div>
+        {/*
+          ACTIVE Phase — always rendered so videoRef.current is never null
+          when startInterview() is called. CSS display controls visibility.
+        */}
+        <div
+          className="phase-active-layout"
+          style={{ display: phase === 'active' ? 'grid' : 'none' }}
+        >
+          {/* Left: Video + Monitoring */}
+          <div className="panel-left">
+            <div className="video-container">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="webcam-video"
+              />
+              <div className="video-overlay">
+                <span className={`face-indicator ${faceDetected ? 'detected' : 'lost'}`}>
+                  {faceDetected ? '👤 Face Detected' : '⚠ No Face'}
+                </span>
               </div>
             </div>
 
-            {/* Right: AI Question + Transcript */}
-            <div className="panel-right">
-              <div className="ai-question-card">
-                <h3>Interview Question</h3>
-                <p className="question-text">
-                  {aiQuestion || 'Waiting for the AI interviewer to ask a question...'}
-                </p>
+            {/* Voice Activity Meter */}
+            <div className="vad-meter">
+              <div className="vad-label">
+                {isSpeaking ? '🎙️ Speaking' : '🔇 Silent'}
               </div>
-
-              <div className="transcript-card">
-                <h3>Your Response</h3>
-                <div className="transcript-content">
-                  {transcript && <p className="final-text">{transcript}</p>}
-                  {interimText && <p className="interim-text">{interimText}</p>}
-                  {!transcript && !interimText && (
-                    <p className="placeholder-text">Start speaking to respond...</p>
-                  )}
-                </div>
+              <div className="vad-bar-track">
+                <div
+                  className="vad-bar-fill"
+                  style={{ width: `${Math.min(energyLevel * 3000, 100)}%` }}
+                />
               </div>
+            </div>
 
-              <button className="btn-danger" onClick={endInterview}>
-                End Interview
-              </button>
+            {/* Monitoring Events */}
+            <div className="monitoring-panel">
+              <h4>Activity Log</h4>
+              <div className="event-list">
+                {monitoringEvents.slice(-5).map((evt, i) => (
+                  <div key={i} className={`event-item event-${evt.type}`}>
+                    <span className="event-time">
+                      {new Date(evt.timestamp).toLocaleTimeString()}
+                    </span>
+                    <span className="event-type">{evt.type}</span>
+                  </div>
+                ))}
+                {monitoringEvents.length === 0 && (
+                  <div className="event-item event-empty">No events yet</div>
+                )}
+              </div>
             </div>
           </div>
-        )}
+
+          {/* Right: AI Question + Transcript */}
+          <div className="panel-right">
+            <div className="ai-question-card">
+              <h3>Interview Question</h3>
+              <p className="question-text">
+                {aiQuestion || 'Waiting for the AI interviewer to ask a question...'}
+              </p>
+            </div>
+
+            <div className="transcript-card">
+              <h3>Your Response</h3>
+              <div className="transcript-content">
+                {transcript && <p className="final-text">{transcript}</p>}
+                {interimText && <p className="interim-text">{interimText}</p>}
+                {!transcript && !interimText && (
+                  <p className="placeholder-text">Start speaking to respond...</p>
+                )}
+              </div>
+            </div>
+
+            <button className="btn-danger" onClick={endInterview}>
+              End Interview
+            </button>
+          </div>
+        </div>
 
         {/* ENDED Phase */}
         {phase === 'ended' && (

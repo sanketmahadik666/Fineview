@@ -69,21 +69,25 @@ class DeviceCapability {
 
   /**
    * Request and verify microphone and camera permissions.
+   * Each is checked independently so one failure does not block the other.
    */
   async _checkPermissions() {
     const result = { microphone: false, camera: false };
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true,
-      });
-      result.microphone = stream.getAudioTracks().length > 0;
-      result.camera = stream.getVideoTracks().length > 0;
-      // Release the stream immediately
-      stream.getTracks().forEach((track) => track.stop());
+      const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      result.microphone = audioStream.getAudioTracks().length > 0;
+      audioStream.getTracks().forEach((t) => t.stop());
     } catch (err) {
-      console.warn('[DeviceCapability] Media permission denied:', err.message);
+      console.warn('[DeviceCapability] Microphone permission denied:', err.message);
+    }
+
+    try {
+      const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      result.camera = videoStream.getVideoTracks().length > 0;
+      videoStream.getTracks().forEach((t) => t.stop());
+    } catch (err) {
+      console.warn('[DeviceCapability] Camera permission denied:', err.message);
     }
 
     return result;
@@ -132,17 +136,18 @@ class DeviceCapability {
       return 'unsupported';
     }
 
-    // SpeechRecognition is required for the current UX (no text fallback yet)
+    // SpeechRecognition is required for voice-based interviews
     if (!browser.speechRecognition) {
       return 'unsupported';
     }
 
-    // Must have permissions
-    if (!permissions.microphone || !permissions.camera) {
+    // Microphone is required — cannot conduct a voice interview without it
+    if (!permissions.microphone) {
       return 'unsupported';
     }
 
-    // Performance tier drives the rest
+    // Camera is optional — interview proceeds in degraded mode without it
+    // Performance tier drives the overall rating
     return perf.tier; // 'high', 'medium', or 'low'
   }
 
@@ -153,6 +158,46 @@ class DeviceCapability {
   shouldDegrade() {
     return this.results.overall === 'low';
   }
+}
+
+/**
+ * Phase 1 DeviceCapabilityProbe
+ *
+ * Matches the LLD spec: returns a tier (LOW | MID | HIGH) plus
+ * module activation flags used to gate VadModule, MeydaModule,
+ * VisionModule and SttModule.
+ */
+export async function probeDevice() {
+  const cores = navigator.hardwareConcurrency || 2;
+  const memGB = navigator.deviceMemory || 1;
+  const conn = navigator.connection?.effectiveType || '4g';
+
+  // WebGL check for MediaPipe GPU delegate
+  const canvas = document.createElement('canvas');
+  const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+  const hasGPU = !!gl;
+
+  // SharedArrayBuffer check for ONNX WASM
+  const hasSharedArrayBuffer = typeof SharedArrayBuffer !== 'undefined';
+
+  let tier = 'HIGH';
+  if (cores <= 2 || memGB < 2 || !hasGPU) tier = 'LOW';
+  else if (cores <= 3 || memGB < 4) tier = 'MID';
+
+  return {
+    tier,
+    cores,
+    memGB,
+    conn,
+    hasGPU,
+    hasSharedArrayBuffer,
+    modules: {
+      vad: tier !== 'LOW', // Silero V5 on LOW is too heavy
+      meyda: tier === 'HIGH',
+      vision: tier !== 'LOW' && hasGPU,
+      sttCont: tier !== 'LOW',
+    },
+  };
 }
 
 export default DeviceCapability;
