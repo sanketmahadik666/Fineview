@@ -187,7 +187,7 @@ export default function useInterview(serverUrl) {
       setError('Failed to start interview: ' + err.message);
       setPhase('ready');
     }
-  }, [phase, serverUrl]);
+  }, [phase, serverUrl, speechSupported, speechSupportReason]);
 
   /**
    * Step 3: End the interview session (cleanup all services).

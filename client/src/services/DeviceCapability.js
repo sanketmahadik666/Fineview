@@ -69,21 +69,25 @@ class DeviceCapability {
 
   /**
    * Request and verify microphone and camera permissions.
+   * Each is checked independently so one failure does not block the other.
    */
   async _checkPermissions() {
     const result = { microphone: false, camera: false };
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true,
-      });
-      result.microphone = stream.getAudioTracks().length > 0;
-      result.camera = stream.getVideoTracks().length > 0;
-      // Release the stream immediately
-      stream.getTracks().forEach((track) => track.stop());
+      const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      result.microphone = audioStream.getAudioTracks().length > 0;
+      audioStream.getTracks().forEach((t) => t.stop());
     } catch (err) {
-      console.warn('[DeviceCapability] Media permission denied:', err.message);
+      console.warn('[DeviceCapability] Microphone permission denied:', err.message);
+    }
+
+    try {
+      const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      result.camera = videoStream.getVideoTracks().length > 0;
+      videoStream.getTracks().forEach((t) => t.stop());
+    } catch (err) {
+      console.warn('[DeviceCapability] Camera permission denied:', err.message);
     }
 
     return result;
@@ -132,17 +136,18 @@ class DeviceCapability {
       return 'unsupported';
     }
 
-    // SpeechRecognition is required for the current UX (no text fallback yet)
+    // SpeechRecognition is required for voice-based interviews
     if (!browser.speechRecognition) {
       return 'unsupported';
     }
 
-    // Must have permissions
-    if (!permissions.microphone || !permissions.camera) {
+    // Microphone is required — cannot conduct a voice interview without it
+    if (!permissions.microphone) {
       return 'unsupported';
     }
 
-    // Performance tier drives the rest
+    // Camera is optional — interview proceeds in degraded mode without it
+    // Performance tier drives the overall rating
     return perf.tier; // 'high', 'medium', or 'low'
   }
 
