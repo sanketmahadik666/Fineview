@@ -25,7 +25,7 @@ export async function startWorker() {
   // Create WebSocket Server attached to the HTTP server
   const wss = new WebSocketServer({ server });
 
-  const port = process.env.PORT || 3001;
+  const port = process.env.PORT || 3002;
 
   // Middleware
   const corsOrigin = process.env.CORS_ORIGIN || '*';
