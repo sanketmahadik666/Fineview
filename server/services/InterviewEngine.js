@@ -1,17 +1,22 @@
 import InterviewSession from '../models/InterviewSession.js';
 import Transcript from '../models/Transcript.js';
 import llmService from './LLMService.js';
+import EvalQueue from './EvalQueue.js';
 
 /**
- * AI Interview Engine
+ * AI Interview Engine — Phase 3 update
  *
- * Uses an LLM (when configured) to:
- *   - Generate context-aware interview questions
- *   - Produce structured evaluation scores at the end of the session
- *
- * Falls back to a static script and simulated scores if the LLM is not configured
- * or fails, so the system still works in offline/demo environments.
+ * Changes in this revision:
+ *   ✅ EvalQueue — evaluation is decoupled from the WebSocket handler.
+ *      triggerEvaluation() enqueues an async job; the WS handler returns
+ *      immediately and the job runs in the background with retries.
+ *   ✅ Session state map — kept in-process (safe per-worker); documented
+ *      Redis upgrade path in comments.
+ *   ✅ WebSocket safety — all ws.send() calls check ws.readyState first.
  */
+
+const evalQueue = new EvalQueue({ concurrency: 2, maxRetries: 3 });
+
 class InterviewEngine {
   constructor() {
     this.defaultQuestions = [
@@ -21,16 +26,18 @@ class InterviewEngine {
       "What are your long-term career goals and how does this role fit into them?",
       "Thank you for your time. Do you have any questions for us?"
     ];
-    
-    // Track conversation state per session
-    // In production, this lives in Redis to be cluster-safe
+
+    // In-process session state.
+    // LLD note: In a multi-node Redis-backed deployment, replace this Map with
+    // `await redisClient.hGetAll(`session:${key}`)` + `hSet` calls.
+    // The interface of startSession / handleCandidateResponse / triggerEvaluation
+    // remains identical — only the state read/write lines change.
     this.sessionState = new Map();
   }
 
   async startSession(sessionId, ws) {
     const key = sessionId.toString();
 
-    // Load role context once per session
     const session = await InterviewSession.findById(sessionId).lean().catch(() => null);
     const jobRole = session?.jobRole || 'Unspecified';
 
@@ -40,28 +47,20 @@ class InterviewEngine {
       jobRole,
     });
 
-    // Generate first question via LLM, with fallback to defaults
     let questionText = null;
     if (llmService.isConfigured) {
       try {
-        questionText = await llmService.generateQuestion({
-          jobRole,
-          questionIndex: 0,
-        });
+        questionText = await llmService.generateQuestion({ jobRole, questionIndex: 0 });
       } catch (err) {
         console.warn('[InterviewEngine] LLM generateQuestion failed, using default script:', err.message);
       }
     }
 
-    if (!questionText) {
-      questionText = this.defaultQuestions[0];
-    }
-
-    this._sendQuestion(ws, questionText);
+    this._sendQuestion(ws, questionText || this.defaultQuestions[0]);
   }
 
   async handleCandidateResponse(sessionId, ws, transcriptText, isFinal) {
-    if (!isFinal) return; // Only act on complete thoughts
+    if (!isFinal) return;
 
     const key = sessionId.toString();
     const state = this.sessionState.get(key);
@@ -69,16 +68,14 @@ class InterviewEngine {
 
     state.turnCount++;
 
-    // Arbitrary simple logic: wait for 2 final transcript chunks per question
     if (state.turnCount >= 2) {
       state.questionIndex++;
       state.turnCount = 0;
 
       if (state.questionIndex < this.defaultQuestions.length) {
-        // Send next question (LLM-backed when available) with a slight delay to simulate "thinking"
         setTimeout(async () => {
           const idx = state.questionIndex;
-          const fallback = this.defaultQuestions[idx] || this.defaultQuestions[this.defaultQuestions.length - 1];
+          const fallback = this.defaultQuestions[idx] ?? this.defaultQuestions[this.defaultQuestions.length - 1];
 
           let nextQuestion = null;
           if (llmService.isConfigured) {
@@ -90,118 +87,103 @@ class InterviewEngine {
                 lastAnswer: transcriptText,
               });
             } catch (err) {
-              console.warn('[InterviewEngine] LLM generateQuestion failed, using default script:', err.message);
+              console.warn('[InterviewEngine] LLM generateQuestion failed, using default:', err.message);
             }
           }
 
           this._sendQuestion(ws, nextQuestion || fallback);
         }, 1500);
       } else {
-        // End of questions -> evaluate
         this.triggerEvaluation(sessionId, ws);
       }
     }
   }
 
   _sendQuestion(ws, questionText) {
-    ws.send(JSON.stringify({
-      type: 'ai_question',
-      payload: { question: questionText }
-    }));
+    if (!ws || ws.readyState !== 1 /* WebSocket.OPEN */) return;
+    ws.send(JSON.stringify({ type: 'ai_question', payload: { question: questionText } }));
   }
 
-  async triggerEvaluation(sessionId, ws) {
+  /**
+   * Enqueue a final evaluation job.
+   * Returns immediately — the actual evaluation runs async via EvalQueue.
+   */
+  triggerEvaluation(sessionId, ws) {
     const key = sessionId.toString();
-    // If we've already cleaned up this session, avoid double evaluation
+
     if (!this.sessionState.has(key)) {
       console.log(`[InterviewEngine] triggerEvaluation called for unknown session: ${sessionId}`);
       return;
     }
-    console.log(`[InterviewEngine] Triggering final evaluation for session: ${sessionId}`);
-    
-    ws.send(JSON.stringify({
-      type: 'ai_question',
-      payload: { question: 'Evaluating your interview...' }
-    }));
 
-    let scores = null;
-    let feedback = '';
+    this._sendQuestion(ws, 'Evaluating your interview...');
 
+    // Mark session state cleaned up immediately to prevent double-evaluation
+    this.sessionState.delete(key);
+
+    // Enqueue async — EvalQueue handles retries on transient failures
+    evalQueue.enqueue(key, async () => {
+      await this._runEvaluation(sessionId, ws);
+    }).catch((err) => {
+      console.error(`[InterviewEngine] Evaluation permanently failed for session ${sessionId}:`, err.message);
+    });
+  }
+
+  async _runEvaluation(sessionId, ws) {
     const session = await InterviewSession.findById(sessionId).lean().catch(() => null);
     const jobRole = session?.jobRole || 'Unspecified';
     const candidateName = session?.candidateName || 'Candidate';
 
-    // Gather all final transcript segments for holistic evaluation
     const finalSegments = await Transcript.find({ sessionId, isFinal: true })
       .sort({ timestamp: 1 })
       .lean()
       .catch(() => []);
 
-    const transcriptText = finalSegments.map((seg) => seg.text).join('\n');
+    const transcriptText = finalSegments.map((s) => s.text).join('\n');
 
-    const evalStart = Date.now();
+    let scores = null;
+    let feedback = '';
+
     if (llmService.isConfigured) {
       try {
-        const result = await llmService.evaluateInterview({
-          jobRole,
-          candidateName,
-          transcript: transcriptText,
-        });
+        const result = await llmService.evaluateInterview({ jobRole, candidateName, transcript: transcriptText });
         scores = result.scores || null;
         feedback = result.feedback || '';
-        console.log(
-          `[InterviewEngine] LLM evaluation completed in ${Date.now() - evalStart}ms for session ${sessionId}`
-        );
       } catch (err) {
-        console.error('[InterviewEngine] LLM evaluation failed, falling back to simulated scores:', err.message);
+        console.error('[InterviewEngine] LLM evaluation failed, using simulated scores:', err.message);
       }
     }
 
-    // Fallback to simulated scores if LLM is not configured or failed
     if (!scores) {
-      const simulated = {
+      const sim = {
         conceptualUnderstanding: Math.floor(Math.random() * 20) + 80,
         problemSolving: Math.floor(Math.random() * 20) + 75,
         communication: Math.floor(Math.random() * 20) + 85,
         responseCompleteness: Math.floor(Math.random() * 20) + 80,
       };
-      simulated.overallScore = Math.floor(
-        (simulated.conceptualUnderstanding +
-          simulated.problemSolving +
-          simulated.communication +
-          simulated.responseCompleteness) /
-          4
+      sim.overallScore = Math.floor(
+        (sim.conceptualUnderstanding + sim.problemSolving + sim.communication + sim.responseCompleteness) / 4
       );
-      scores = simulated;
-      feedback =
-        'Simulated evaluation: strong communication and overall understanding; real AI evaluation not configured.';
+      scores = sim;
+      feedback = 'Simulated evaluation — real AI evaluation not configured.';
     }
 
-    // Update DB with high durability Write Concern (w: "majority")
     await InterviewSession.findByIdAndUpdate(
       sessionId,
-      {
-        status: 'completed',
-        endTime: new Date(),
-        evaluationScores: scores,
-        aiFeedback: feedback,
-      },
+      { status: 'completed', endTime: new Date(), evaluationScores: scores, aiFeedback: feedback },
       { writeConcern: { w: 'majority', wtimeout: 5000 } }
     );
 
-    // Notify client with structured scores
-    ws.send(
-      JSON.stringify({
+    if (ws && ws.readyState === 1) {
+      ws.send(JSON.stringify({
         type: 'interview_completed',
-        payload: {
-          message: 'Interview concluded and evaluated successfully.',
-          scores,
-        },
-      })
-    );
+        payload: { message: 'Interview concluded and evaluated successfully.', scores },
+      }));
+    }
+  }
 
-    // Clean up local tracking state
-    this.sessionState.delete(key);
+  getQueueMetrics() {
+    return evalQueue.getMetrics();
   }
 }
 

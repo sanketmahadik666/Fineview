@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import useInterview from '../hooks/useInterview';
 import './InterviewPage.css';
 
+
 /**
  * InterviewPage Component
  * 
@@ -32,6 +33,7 @@ export default function InterviewPage() {
     error,
     speechSupported,
     speechSupportReason,
+    nlpSummary,
     checkDevice,
     startInterview,
     endInterview,
@@ -245,6 +247,16 @@ export default function InterviewPage() {
             <div className="session-summary">
               <p><strong>Events Logged:</strong> {monitoringEvents.length}</p>
               <p><strong>Transcript Length:</strong> {transcript.length} characters</p>
+              {nlpSummary && (
+                <>
+                  <p><strong>Words Spoken:</strong> {nlpSummary.totalWords}</p>
+                  <p><strong>Vocabulary Richness:</strong> {(nlpSummary.vocabularyRichness * 100).toFixed(0)}%</p>
+                  <p><strong>Filler Word Rate:</strong> {(nlpSummary.fillerRatio * 100).toFixed(1)}%</p>
+                  {nlpSummary.communicationScore != null && (
+                    <p><strong>Communication Score:</strong> {nlpSummary.communicationScore} / 100</p>
+                  )}
+                </>
+              )}
             </div>
           </div>
         )}

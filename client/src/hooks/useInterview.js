@@ -5,16 +5,22 @@ import WebcamMonitor from '../services/WebcamMonitor';
 import BrowserActivityTracker from '../services/BrowserActivityTracker';
 import DeviceCapability from '../services/DeviceCapability';
 import SocketService from '../services/SocketService';
+import MeydaModule from '../services/MeydaModule';
+import NlpModule from '../services/NlpModule';
 
 /**
- * useInterview Hook
- * 
+ * useInterview Hook — Phase 2 update
+ *
  * Orchestrates all client-side services for an interview session.
  * Manages the full lifecycle: device check → permissions → start → monitor → stop.
+ *
+ * Phase 2 additions:
+ *   ✅ MeydaModule — spectral audio feature extraction (AudioWorklet, shares VAD's AudioContext)
+ *   ✅ NlpModule   — real-time NLP preprocessing per transcript segment (compromise.js)
  */
 export default function useInterview(serverUrl) {
   // State
-  const [phase, setPhase] = useState('idle'); // idle | checking | ready | active | ended
+  const [phase, setPhase] = useState('idle');
   const [deviceInfo, setDeviceInfo] = useState(null);
   const [transcript, setTranscript] = useState('');
   const [interimText, setInterimText] = useState('');
@@ -28,6 +34,8 @@ export default function useInterview(serverUrl) {
   const [sessionStats, setSessionStats] = useState(null);
   const [speechSupported, setSpeechSupported] = useState(true);
   const [speechSupportReason, setSpeechSupportReason] = useState('');
+  const [nlpSummary, setNlpSummary] = useState(null);
+  const [meydaFeatures, setMeydaFeatures] = useState(null);
 
   // Refs for service instances
   const speechRef = useRef(null);
@@ -36,6 +44,8 @@ export default function useInterview(serverUrl) {
   const trackerRef = useRef(null);
   const socketRef = useRef(null);
   const deviceRef = useRef(null);
+  const meydaRef = useRef(null);
+  const nlpRef = useRef(null);
   const perfCheckRef = useRef(null);
 
   /**
@@ -51,7 +61,6 @@ export default function useInterview(serverUrl) {
       deviceRef.current = device;
       setDeviceInfo(results);
 
-      // Reflect speech support in hook state for UI
       if (!results.browser?.speechRecognition) {
         setSpeechSupported(false);
         setSpeechSupportReason(
@@ -88,12 +97,8 @@ export default function useInterview(serverUrl) {
     try {
       const shouldDegrade = deviceRef.current?.shouldDegrade();
 
-      // Guard: do not start if speech is not supported
       if (!speechSupported) {
-        throw new Error(
-          speechSupportReason ||
-            'Speech recognition is not supported in this browser.'
-        );
+        throw new Error(speechSupportReason || 'Speech recognition is not supported in this browser.');
       }
 
       // --- WebSocket ---
@@ -101,12 +106,9 @@ export default function useInterview(serverUrl) {
       socketRef.current = socket;
       socket.onConnect = () => setIsConnected(true);
       socket.onDisconnect = () => setIsConnected(false);
-      socket.on('ai_question', (payload) => {
-        setAiQuestion(payload.question || '');
-      });
+      socket.on('ai_question', (payload) => setAiQuestion(payload.question || ''));
       socket.connect();
 
-      // Send start_interview message once socket is available
       socket.send('start_interview', {
         name: 'Candidate',
         role: 'General Interview',
@@ -116,7 +118,7 @@ export default function useInterview(serverUrl) {
       // --- Microphone stream ---
       const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      // --- VAD (pass degraded flag for fftSize 256) ---
+      // --- VAD (Phase 1) ---
       const vad = new VoiceActivityDetection({
         threshold: shouldDegrade ? 0.025 : 0.015,
         silenceDelay: shouldDegrade ? 1200 : 800,
@@ -128,50 +130,69 @@ export default function useInterview(serverUrl) {
       vad.onEnergyLevel = (energy) => setEnergyLevel(energy);
       vad.start();
 
-      // --- Speech Capture ---
+      // --- MeydaModule (Phase 2) — shares VAD's AudioContext + source node ---
+      const meyda = new MeydaModule({ maxHistory: shouldDegrade ? 30 : 60 });
+      meydaRef.current = meyda;
+      meyda.onFeatures = (features) => {
+        setMeydaFeatures(features);
+      };
+      // VAD exposes .audioContext and .source as public properties
+      const meydaReady = await meyda.init(vad.audioContext, vad.source);
+      if (meydaReady) {
+        meyda.start();
+      } else {
+        console.warn('[useInterview] MeydaModule failed to initialize — spectral features disabled');
+      }
+
+      // --- NlpModule (Phase 2) ---
+      const nlp = new NlpModule();
+      nlpRef.current = nlp;
+
+      // --- Speech Capture (Phase 1) ---
       const speech = new SpeechCapture();
       speechRef.current = speech;
       speech.onResult = (finalText, interim) => {
         setTranscript(finalText);
         setInterimText(interim);
-        // Send final transcript segments to server
         if (finalText) {
           socket.sendTranscript(finalText, true);
+
+          // NLP: process each final segment and update summary in state
+          const segResult = nlp.processSegment(finalText);
+          if (segResult) {
+            setNlpSummary(nlp.getSummary());
+          }
         }
       };
       speech.start();
 
-      // --- Webcam Monitor ---
+      // --- Webcam Monitor (Phase 2 / VisionModule) ---
       const webcam = new WebcamMonitor();
       webcamRef.current = webcam;
-      if (shouldDegrade) {
-        webcam.enableDegradedMode();
-      }
+      if (shouldDegrade) webcam.enableDegradedMode();
+
       const camReady = await webcam.init(videoEl, canvasEl);
       if (camReady) {
-        webcam.onFaceDetected = (count) => setFaceDetected(true);
+        webcam.onFaceDetected = () => setFaceDetected(true);
         webcam.onFaceLost = () => setFaceDetected(false);
         webcam.onMultipleFaces = (count) => {
           const evt = { type: 'multiple_faces', count, timestamp: Date.now() };
           setMonitoringEvents((prev) => [...prev, evt]);
           socket.sendMonitoringEvent(evt);
         };
-        webcam.onMonitoringEvent = (evt) => {
-          socket.sendMonitoringEvent(evt);
-        };
+        webcam.onMonitoringEvent = (evt) => socket.sendMonitoringEvent(evt);
         webcam.start();
       }
 
-      // --- Browser Activity Tracker ---
+      // --- Browser Activity Tracker (Phase 1) ---
       const tracker = new BrowserActivityTracker({
         inactivityThreshold: shouldDegrade ? 45000 : 30000,
         maxEvents: shouldDegrade ? 300 : 500,
       });
       trackerRef.current = tracker;
       tracker.onEvent = (evt) => {
-        // Cap React state events to last 50 (UI only needs recent)
         setMonitoringEvents((prev) => [...prev.slice(-49), evt]);
-        socket.sendMonitoringEvent(evt); // Goes through batch buffer
+        socket.sendMonitoringEvent(evt);
       };
       tracker.start();
 
@@ -180,40 +201,46 @@ export default function useInterview(serverUrl) {
         const webcamStats = webcamRef.current?.getStats();
         const vadStats = vadRef.current?.getStats();
         const trackerSummary = trackerRef.current?.getSummary();
-        setSessionStats({ webcam: webcamStats, vad: vadStats, tracker: trackerSummary });
+        const meydaStats = meydaRef.current?.getStats();
+        const currentNlp = nlpRef.current?.getSummary();
+        setSessionStats({ webcam: webcamStats, vad: vadStats, tracker: trackerSummary, meyda: meydaStats });
+        if (currentNlp) setNlpSummary(currentNlp);
       }, 30000);
 
     } catch (err) {
       setError('Failed to start interview: ' + err.message);
       setPhase('ready');
     }
-  }, [phase, serverUrl, speechSupported, speechSupportReason]);
+  }, [phase, serverUrl, speechSupported, speechSupportReason, deviceInfo]);
 
   /**
    * Step 3: End the interview session (cleanup all services).
    */
   const endInterview = useCallback(() => {
-    // Notify server that the client ended the interview (if socket still alive)
     if (socketRef.current) {
-      socketRef.current.send('end_interview', {
-        reason: 'candidate_ended',
-      });
+      socketRef.current.send('end_interview', { reason: 'candidate_ended' });
     }
     if (perfCheckRef.current) {
       clearInterval(perfCheckRef.current);
       perfCheckRef.current = null;
     }
+
     speechRef.current?.stop();
     vadRef.current?.destroy();
+    meydaRef.current?.destroy();
     webcamRef.current?.destroy();
     trackerRef.current?.stop();
     socketRef.current?.disconnect();
 
-    // Capture final stats
     setSessionStats({
       vad: vadRef.current?.getStats?.(),
       tracker: trackerRef.current?.getSummary?.(),
+      meyda: meydaRef.current?.getStats?.(),
     });
+
+    // Capture final NLP summary
+    const finalNlp = nlpRef.current?.getSummary?.();
+    if (finalNlp) setNlpSummary(finalNlp);
 
     setPhase('ended');
   }, []);
@@ -224,6 +251,7 @@ export default function useInterview(serverUrl) {
       if (perfCheckRef.current) clearInterval(perfCheckRef.current);
       speechRef.current?.stop();
       vadRef.current?.destroy();
+      meydaRef.current?.destroy();
       webcamRef.current?.destroy();
       trackerRef.current?.stop();
       socketRef.current?.disconnect();
@@ -231,7 +259,6 @@ export default function useInterview(serverUrl) {
   }, []);
 
   return {
-    // State
     phase,
     deviceInfo,
     transcript,
@@ -246,8 +273,8 @@ export default function useInterview(serverUrl) {
     sessionStats,
     speechSupported,
     speechSupportReason,
-
-    // Actions
+    nlpSummary,
+    meydaFeatures,
     checkDevice,
     startInterview,
     endInterview,
