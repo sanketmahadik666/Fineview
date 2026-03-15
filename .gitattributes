@@ -4,3 +4,4 @@ data/db/journal/WiredTigerPreplog.0000000002 filter=lfs diff=lfs merge=lfs -text
 data/db/journal/WiredTigerLog.0000000005 filter=lfs diff=lfs merge=lfs -text
 data/db/journal/WiredTigerLog.0000000007 filter=lfs diff=lfs merge=lfs -text
 data/db/journal/WiredTigerLog.0000000001 filter=lfs diff=lfs merge=lfs -text
+data/db/journal/WiredTigerLog.0000000002 filter=lfs diff=lfs merge=lfs -text
