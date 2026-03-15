@@ -1,0 +1,50 @@
+~/workspace$ # 1. Stop tracking the MongoDB data folder (already ignored from now on)
+git rm -r --cached data/ 2>/dev/null || true
+
+# 2. Pull and merge the remote commits into local
+git pull origin main --no-rebase
+
+# 3. Push everything up
+git push origin main
+rm 'data/db/WiredTiger'
+rm 'data/db/WiredTiger.lock'
+rm 'data/db/WiredTiger.turtle'
+rm 'data/db/WiredTiger.wt'
+rm 'data/db/WiredTigerHS.wt'
+rm 'data/db/_mdb_catalog.wt'
+rm 'data/db/collection-0--143564298035149787.wt'
+rm 'data/db/collection-10--143564298035149787.wt'
+rm 'data/db/collection-2--143564298035149787.wt'
+rm 'data/db/collection-4--143564298035149787.wt'
+rm 'data/db/collection-7--143564298035149787.wt'
+rm 'data/db/collection-8--143564298035149787.wt'
+rm 'data/db/diagnostic.data/metrics.2026-03-15T12-16-49Z-00000'
+rm 'data/db/diagnostic.data/metrics.2026-03-15T14-08-09Z-00000'
+rm 'data/db/diagnostic.data/metrics.2026-03-15T14-21-19Z-00000'
+rm 'data/db/diagnostic.data/metrics.interim'
+rm 'data/db/index-1--143564298035149787.wt'
+rm 'data/db/index-11--143564298035149787.wt'
+rm 'data/db/index-12--143564298035149787.wt'
+rm 'data/db/index-14--143564298035149787.wt'
+rm 'data/db/index-16--143564298035149787.wt'
+rm 'data/db/index-3--143564298035149787.wt'
+rm 'data/db/index-5--143564298035149787.wt'
+rm 'data/db/index-6--143564298035149787.wt'
+rm 'data/db/index-9--143564298035149787.wt'
+rm 'data/db/journal/WiredTigerLog.0000000003'
+rm 'data/db/journal/WiredTigerPreplog.0000000001'
+rm 'data/db/journal/WiredTigerPreplog.0000000002'
+rm 'data/db/mongod.lock'
+rm 'data/db/sizeStorer.wt'
+rm 'data/db/storage.bson'
+From https://github.com/sanketmahadik666/Fineview
+ * branch            main       -> FETCH_HEAD
+fatal: refusing to merge unrelated histories
+To https://github.com/sanketmahadik666/Fineview
+ ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'https://github.com/sanketmahadik666/Fineview'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+~/workspace$ 
