@@ -28,7 +28,7 @@ outputType = "webview"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "bash /home/runner/workspace/start.sh"
-waitForPort = 3001
+waitForPort = 5000
 
 [[ports]]
 localPort = 3001
