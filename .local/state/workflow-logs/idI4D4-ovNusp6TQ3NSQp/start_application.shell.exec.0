@@ -1,0 +1,1198 @@
+MongoDB started with PID 8880
+Waiting for MongoDB to start...
+{"t":{"$date":"2026-03-15T14:40:21.007+00:00"},"s":"I",  "c":"NETWORK",  "id":4915701, "ctx":"main","msg":"Initialized wire specification","attr":{"spec":{"incomingExternalClient":{"minWireVersion":0,"maxWireVersion":21},"incomingInternalClient":{"minWireVersion":0,"maxWireVersion":21},"outgoing":{"minWireVersion":6,"maxWireVersion":21},"isInternalClient":true}}}
+{"t":{"$date":"2026-03-15T14:40:21.007+00:00"},"s":"I",  "c":"CONTROL",  "id":23285,   "ctx":"main","msg":"Automatically disabling TLS 1.0, to force-enable TLS 1.0 specify --sslDisabledProtocols 'none'"}
+{"t":{"$date":"2026-03-15T14:40:21.020+00:00"},"s":"I",  "c":"NETWORK",  "id":4648601, "ctx":"main","msg":"Implicit TCP FastOpen unavailable. If TCP FastOpen is required, set tcpFastOpenServer, tcpFastOpenClient, and tcpFastOpenQueueSize."}
+{"t":{"$date":"2026-03-15T14:40:21.022+00:00"},"s":"I",  "c":"REPL",     "id":5123008, "ctx":"main","msg":"Successfully registered PrimaryOnlyService","attr":{"service":"TenantMigrationDonorService","namespace":"config.tenantMigrationDonors"}}
+{"t":{"$date":"2026-03-15T14:40:21.022+00:00"},"s":"I",  "c":"REPL",     "id":5123008, "ctx":"main","msg":"Successfully registered PrimaryOnlyService","attr":{"service":"TenantMigrationRecipientService","namespace":"config.tenantMigrationRecipients"}}
+{"t":{"$date":"2026-03-15T14:40:21.022+00:00"},"s":"I",  "c":"CONTROL",  "id":5945603, "ctx":"main","msg":"Multi threading initialized"}
+{"t":{"$date":"2026-03-15T14:40:21.022+00:00"},"s":"I",  "c":"TENANT_M", "id":7091600, "ctx":"main","msg":"Starting TenantMigrationAccessBlockerRegistry"}
+{"t":{"$date":"2026-03-15T14:40:21.022+00:00"},"s":"I",  "c":"CONTROL",  "id":4615611, "ctx":"initandlisten","msg":"MongoDB starting","attr":{"pid":8880,"port":27017,"dbPath":"/home/runner/workspace/data/db","architecture":"64-bit","host":"2e80c1f9bb21"}}
+{"t":{"$date":"2026-03-15T14:40:21.022+00:00"},"s":"W",  "c":"CONTROL",  "id":20720,   "ctx":"initandlisten","msg":"Memory available to mongo process is less than total system memory","attr":{"availableMemSizeMB":8192,"systemMemSizeMB":64306}}
+{"t":{"$date":"2026-03-15T14:40:21.022+00:00"},"s":"I",  "c":"CONTROL",  "id":23403,   "ctx":"initandlisten","msg":"Build Info","attr":{"buildInfo":{"version":"7.0.16","gitVersion":"nogitversion","openSSLVersion":"OpenSSL 3.4.1 11 Feb 2025","modules":[],"allocator":"tcmalloc","environment":{"distarch":"x86_64","target_arch":"x86_64"}}}}
+{"t":{"$date":"2026-03-15T14:40:21.022+00:00"},"s":"I",  "c":"CONTROL",  "id":51765,   "ctx":"initandlisten","msg":"Operating System","attr":{"os":{"name":"Ubuntu","version":"24.04"}}}
+{"t":{"$date":"2026-03-15T14:40:21.022+00:00"},"s":"I",  "c":"CONTROL",  "id":21951,   "ctx":"initandlisten","msg":"Options set by command line","attr":{"options":{"net":{"bindIp":"127.0.0.1","port":27017},"storage":{"dbPath":"/home/runner/workspace/data/db"}}}}
+{"t":{"$date":"2026-03-15T14:40:21.023+00:00"},"s":"W",  "c":"STORAGE",  "id":22271,   "ctx":"initandlisten","msg":"Detected unclean shutdown - Lock file is not empty","attr":{"lockFile":"/home/runner/workspace/data/db/mongod.lock"}}
+{"t":{"$date":"2026-03-15T14:40:21.023+00:00"},"s":"I",  "c":"STORAGE",  "id":22270,   "ctx":"initandlisten","msg":"Storage engine to use detected by data files","attr":{"dbpath":"/home/runner/workspace/data/db","storageEngine":"wiredTiger"}}
+{"t":{"$date":"2026-03-15T14:40:21.023+00:00"},"s":"W",  "c":"STORAGE",  "id":22302,   "ctx":"initandlisten","msg":"Recovering data from the last clean checkpoint."}
+{"t":{"$date":"2026-03-15T14:40:21.023+00:00"},"s":"I",  "c":"STORAGE",  "id":22315,   "ctx":"initandlisten","msg":"Opening WiredTiger","attr":{"config":"create,cache_size=3584M,session_max=33000,eviction=(threads_min=4,threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,remove=true,path=journal,compressor=snappy),builtin_extension_config=(zstd=(compression_level=6)),file_manager=(close_idle_time=600,close_scan_interval=10,close_handle_minimum=2000),statistics_log=(wait=0),json_output=(error,message),verbose=[recovery_progress:1,checkpoint_progress:1,compact_progress:1,backup:0,checkpoint:0,compact:0,evict:0,history_store:0,recovery:0,rts:0,salvage:0,tiered:0,timestamp:0,transaction:0,verify:0,log:0],"}}
+{"t":{"$date":"2026-03-15T14:40:21.229+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":229617,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2141:__wt_log_scan LSN 7/4864 larger than biggest log file 4","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.229+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":229721,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2424:WiredTiger is unable to read the recovery log","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.229+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":229753,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2425:This may be due to the log files being encrypted, being from an older version or due to corruption on disk","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.229+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":229780,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2428:You should confirm that you have opened the database with the correct options including all encryption and compression options","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.229+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":229808,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_txn_recover:1229:Recovery failed","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.232+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":0,"message":{"ts_sec":1773585621,"ts_usec":232783,"thread":"8880:0x7f530cd1ff40","session_name":"connection","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_cache_destroy:377:cache server: exiting with 2 pages in memory and 0 pages evicted"}}}
+{"t":{"$date":"2026-03-15T14:40:21.232+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":0,"message":{"ts_sec":1773585621,"ts_usec":232834,"thread":"8880:0x7f530cd1ff40","session_name":"connection","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_cache_destroy:381:cache server: exiting with 32781 image bytes in memory"}}}
+{"t":{"$date":"2026-03-15T14:40:21.232+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":0,"message":{"ts_sec":1773585621,"ts_usec":232863,"thread":"8880:0x7f530cd1ff40","session_name":"connection","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_cache_destroy:384:cache server: exiting with 33477 bytes in memory"}}}
+{"t":{"$date":"2026-03-15T14:40:21.245+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":245491,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2141:__wt_log_scan LSN 7/4864 larger than biggest log file 5","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.245+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":245557,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2424:WiredTiger is unable to read the recovery log","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.245+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":245577,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2425:This may be due to the log files being encrypted, being from an older version or due to corruption on disk","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.245+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":245597,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2428:You should confirm that you have opened the database with the correct options including all encryption and compression options","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.245+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":245617,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_txn_recover:1229:Recovery failed","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.249+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":0,"message":{"ts_sec":1773585621,"ts_usec":249088,"thread":"8880:0x7f530cd1ff40","session_name":"connection","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_cache_destroy:377:cache server: exiting with 2 pages in memory and 0 pages evicted"}}}
+{"t":{"$date":"2026-03-15T14:40:21.249+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":0,"message":{"ts_sec":1773585621,"ts_usec":249128,"thread":"8880:0x7f530cd1ff40","session_name":"connection","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_cache_destroy:381:cache server: exiting with 32781 image bytes in memory"}}}
+{"t":{"$date":"2026-03-15T14:40:21.249+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":0,"message":{"ts_sec":1773585621,"ts_usec":249148,"thread":"8880:0x7f530cd1ff40","session_name":"connection","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_cache_destroy:384:cache server: exiting with 33477 bytes in memory"}}}
+{"t":{"$date":"2026-03-15T14:40:21.262+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":262136,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2141:__wt_log_scan LSN 7/4864 larger than biggest log file 6","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.262+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":262205,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2424:WiredTiger is unable to read the recovery log","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.262+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":262225,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2425:This may be due to the log files being encrypted, being from an older version or due to corruption on disk","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.262+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":262245,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_log_scan:2428:You should confirm that you have opened the database with the correct options including all encryption and compression options","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.262+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":-31803,"message":{"ts_sec":1773585621,"ts_usec":262269,"thread":"8880:0x7f530cd1ff40","session_name":"txn-recover","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_txn_recover:1229:Recovery failed","error_str":"WT_NOTFOUND: item not found","error_code":-31803}}}
+{"t":{"$date":"2026-03-15T14:40:21.266+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":0,"message":{"ts_sec":1773585621,"ts_usec":266020,"thread":"8880:0x7f530cd1ff40","session_name":"connection","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_cache_destroy:377:cache server: exiting with 2 pages in memory and 0 pages evicted"}}}
+{"t":{"$date":"2026-03-15T14:40:21.266+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":0,"message":{"ts_sec":1773585621,"ts_usec":266089,"thread":"8880:0x7f530cd1ff40","session_name":"connection","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_cache_destroy:381:cache server: exiting with 32781 image bytes in memory"}}}
+{"t":{"$date":"2026-03-15T14:40:21.266+00:00"},"s":"E",  "c":"WT",       "id":22435,   "ctx":"initandlisten","msg":"WiredTiger error message","attr":{"error":0,"message":{"ts_sec":1773585621,"ts_usec":266107,"thread":"8880:0x7f530cd1ff40","session_name":"connection","category":"WT_VERB_DEFAULT","category_id":9,"verbose_level":"ERROR","verbose_level_id":-3,"msg":"__wt_cache_destroy:384:cache server: exiting with 33477 bytes in memory"}}}
+{"t":{"$date":"2026-03-15T14:40:21.267+00:00"},"s":"W",  "c":"STORAGE",  "id":22347,   "ctx":"initandlisten","msg":"Failed to start up WiredTiger under any compatibility version. This may be due to an unsupported upgrade or downgrade."}
+{"t":{"$date":"2026-03-15T14:40:21.267+00:00"},"s":"F",  "c":"ASSERT",   "id":23089,   "ctx":"initandlisten","msg":"Fatal assertion","attr":{"msgid":28559,"file":"src/mongo/db/storage/wiredtiger/wiredtiger_util.cpp","line":208}}
+{"t":{"$date":"2026-03-15T14:40:21.267+00:00"},"s":"F",  "c":"ASSERT",   "id":23090,   "ctx":"initandlisten","msg":"\n\n***aborting after fassert() failure\n\n"}
+{"t":{"$date":"2026-03-15T14:40:21.267+00:00"},"s":"F",  "c":"CONTROL",  "id":6384300, "ctx":"initandlisten","msg":"Writing fatal message","attr":{"message":"\n"}}
+{"t":{"$date":"2026-03-15T14:40:21.267+00:00"},"s":"F",  "c":"CONTROL",  "id":6384300, "ctx":"initandlisten","msg":"Writing fatal message","attr":{"message":"Got signal: 6 (Aborted).\n"}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31380,   "ctx":"initandlisten","msg":"BACKTRACE","attr":{"bt":{"backtrace":[{"a":"55DB5695CA17","b":"55DB500FA000","o":"6862A17","s":"_ZN5mongo15printStackTraceEv","C":"mongo::printStackTrace()","s+":"37"},{"a":"55DB569577B9","b":"55DB500FA000","o":"685D7B9","s":"abruptQuit","s+":"69"},{"a":"7F530BC6F4B0","b":"7F530BC2E000","o":"414B0","s":"__sigaction","s+":"50"},{"a":"7F530BCC7D1C","b":"7F530BC2E000","o":"99D1C","s":"__pthread_kill_implementation","s+":"11C"},{"a":"7F530BC6F406","b":"7F530BC2E000","o":"41406","s":"gsignal","s+":"16"},{"a":"7F530BC5693A","b":"7F530BC2E000","o":"2893A","s":"abort","s+":"D7"},{"a":"55DB52D724A5","b":"55DB500FA000","o":"2C784A5","s":"_ZN5mongo12_GLOBAL__N_19callAbortEv","C":"mongo::(anonymous namespace)::callAbort()","s+":"1B"},{"a":"55DB52D7328B","b":"55DB500FA000","o":"2C7928B","s":"_ZN5mongo25fassertFailedWithLocationEiPKcj","C":"mongo::fassertFailedWithLocation(int, char const*, unsigned int)","s+":"104"},{"a":"55DB52813D61","b":"55DB500FA000","o":"2719D61","s":"_ZN5mongo17wtRCToStatus_slowEiP12__wt_sessionNS_10StringDataE.cold","C":"mongo::wtRCToStatus_slow(int, __wt_session*, mongo::StringData) [clone .cold]","s+":"F0"},{"a":"55DB541C15F8","b":"55DB500FA000","o":"40C75F8","s":"_ZN5mongo12wtRCToStatusEiP12__wt_sessionPKc","C":"mongo::wtRCToStatus(int, __wt_session*, char const*)","s+":"88"},{"a":"55DB541D2C22","b":"55DB500FA000","o":"40D8C22","s":"_ZN5mongo18WiredTigerKVEngine15_openWiredTigerERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES8_","C":"mongo::WiredTigerKVEngine::_openWiredTiger(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)","s+":"572"},{"a":"55DB541DB7AA","b":"55DB500FA000","o":"40E17AA","s":"_ZN5mongo18WiredTigerKVEngineC2EPNS_16OperationContextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESA_PNS_11ClockSourceESA_mmbb","C":"mongo::WiredTigerKVEngine::WiredTigerKVEngine(mongo::OperationContext*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, mongo::ClockSource*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, bool, bool)","s+":"C8A"},{"a":"55DB541A070D","b":"55DB500FA000","o":"40A670D","s":"_ZNK5mongo12_GLOBAL__N_117WiredTigerFactory6createEPNS_16OperationContextERKNS_19StorageGlobalParamsEPKNS_21StorageEngineLockFileE","C":"mongo::(anonymous namespace)::WiredTigerFactory::create(mongo::OperationContext*, mongo::StorageGlobalParams const&, mongo::StorageEngineLockFile const*) const","s+":"1BD"},{"a":"55DB544C1D7F","b":"55DB500FA000","o":"43C7D7F","s":"_ZN5mongo23initializeStorageEngineEPNS_16OperationContextENS_22StorageEngineInitFlagsEPNS_14BSONObjBuilderE","C":"mongo::initializeStorageEngine(mongo::OperationContext*, mongo::StorageEngineInitFlags, mongo::BSONObjBuilder*)","s+":"71F"},{"a":"55DB5311B12C","b":"55DB500FA000","o":"302112C","s":"_ZN5mongo12_GLOBAL__N_114_initAndListenEPNS_14ServiceContextEi.isra.0","C":"mongo::(anonymous namespace)::_initAndListen(mongo::ServiceContext*, int) [clone .isra.0]","s+":"5BC"},{"a":"55DB5311E53E","b":"55DB500FA000","o":"302453E","s":"_ZN5mongo11mongod_mainEiPPc","C":"mongo::mongod_main(int, char**)","s+":"105E"},{"a":"55DB524DC94B","b":"55DB500FA000","o":"23E294B","s":"main","s+":"B"},{"a":"7F530BC5847E","b":"7F530BC2E000","o":"2A47E","s":"__libc_start_call_main","s+":"7E"},{"a":"7F530BC58539","b":"7F530BC2E000","o":"2A539","s":"__libc_start_main","s+":"89"},{"a":"55DB53116585","b":"55DB500FA000","o":"301C585","s":"_start","s+":"25"}],"processInfo":{"mongodbVersion":"7.0.16","gitVersion":"nogitversion","compiledModules":[],"uname":{"sysname":"Linux","release":"6.14.11","version":"#1-NixOS SMP PREEMPT_DYNAMIC Tue Jan  1 00:00:00 UTC 1980","machine":"x86_64"},"somap":[{"b":"55DB500FA000","elfType":3,"buildId":"8A0B24C6AC4D91331AD3A6F3700FC297CCC76B32"},{"b":"7F530BC2E000","path":"/nix/store/zdpby3l6azi78sl83cpad2qjpfj25aqx-glibc-2.40-66/lib/libc.so.6","elfType":3,"buildId":"184C6644327611CADEF0A544327EBB842FCEAA2C"}]}}},"tags":[]}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB5695CA17","b":"55DB500FA000","o":"6862A17","s":"_ZN5mongo15printStackTraceEv","C":"mongo::printStackTrace()","s+":"37"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB569577B9","b":"55DB500FA000","o":"685D7B9","s":"abruptQuit","s+":"69"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"7F530BC6F4B0","b":"7F530BC2E000","o":"414B0","s":"__sigaction","s+":"50"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"7F530BCC7D1C","b":"7F530BC2E000","o":"99D1C","s":"__pthread_kill_implementation","s+":"11C"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"7F530BC6F406","b":"7F530BC2E000","o":"41406","s":"gsignal","s+":"16"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"7F530BC5693A","b":"7F530BC2E000","o":"2893A","s":"abort","s+":"D7"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB52D724A5","b":"55DB500FA000","o":"2C784A5","s":"_ZN5mongo12_GLOBAL__N_19callAbortEv","C":"mongo::(anonymous namespace)::callAbort()","s+":"1B"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB52D7328B","b":"55DB500FA000","o":"2C7928B","s":"_ZN5mongo25fassertFailedWithLocationEiPKcj","C":"mongo::fassertFailedWithLocation(int, char const*, unsigned int)","s+":"104"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB52813D61","b":"55DB500FA000","o":"2719D61","s":"_ZN5mongo17wtRCToStatus_slowEiP12__wt_sessionNS_10StringDataE.cold","C":"mongo::wtRCToStatus_slow(int, __wt_session*, mongo::StringData) [clone .cold]","s+":"F0"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB541C15F8","b":"55DB500FA000","o":"40C75F8","s":"_ZN5mongo12wtRCToStatusEiP12__wt_sessionPKc","C":"mongo::wtRCToStatus(int, __wt_session*, char const*)","s+":"88"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB541D2C22","b":"55DB500FA000","o":"40D8C22","s":"_ZN5mongo18WiredTigerKVEngine15_openWiredTigerERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES8_","C":"mongo::WiredTigerKVEngine::_openWiredTiger(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)","s+":"572"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB541DB7AA","b":"55DB500FA000","o":"40E17AA","s":"_ZN5mongo18WiredTigerKVEngineC2EPNS_16OperationContextERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESA_PNS_11ClockSourceESA_mmbb","C":"mongo::WiredTigerKVEngine::WiredTigerKVEngine(mongo::OperationContext*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, mongo::ClockSource*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, unsigned long, bool, bool)","s+":"C8A"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB541A070D","b":"55DB500FA000","o":"40A670D","s":"_ZNK5mongo12_GLOBAL__N_117WiredTigerFactory6createEPNS_16OperationContextERKNS_19StorageGlobalParamsEPKNS_21StorageEngineLockFileE","C":"mongo::(anonymous namespace)::WiredTigerFactory::create(mongo::OperationContext*, mongo::StorageGlobalParams const&, mongo::StorageEngineLockFile const*) const","s+":"1BD"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB544C1D7F","b":"55DB500FA000","o":"43C7D7F","s":"_ZN5mongo23initializeStorageEngineEPNS_16OperationContextENS_22StorageEngineInitFlagsEPNS_14BSONObjBuilderE","C":"mongo::initializeStorageEngine(mongo::OperationContext*, mongo::StorageEngineInitFlags, mongo::BSONObjBuilder*)","s+":"71F"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB5311B12C","b":"55DB500FA000","o":"302112C","s":"_ZN5mongo12_GLOBAL__N_114_initAndListenEPNS_14ServiceContextEi.isra.0","C":"mongo::(anonymous namespace)::_initAndListen(mongo::ServiceContext*, int) [clone .isra.0]","s+":"5BC"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB5311E53E","b":"55DB500FA000","o":"302453E","s":"_ZN5mongo11mongod_mainEiPPc","C":"mongo::mongod_main(int, char**)","s+":"105E"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB524DC94B","b":"55DB500FA000","o":"23E294B","s":"main","s+":"B"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"7F530BC5847E","b":"7F530BC2E000","o":"2A47E","s":"__libc_start_call_main","s+":"7E"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"7F530BC58539","b":"7F530BC2E000","o":"2A539","s":"__libc_start_main","s+":"89"}}}
+{"t":{"$date":"2026-03-15T14:40:21.335+00:00"},"s":"I",  "c":"CONTROL",  "id":31445,   "ctx":"initandlisten","msg":"Frame","attr":{"frame":{"a":"55DB53116585","b":"55DB500FA000","o":"301C585","s":"_start","s+":"25"}}}
+Waiting... attempt 1
+/home/runner/workspace/start.sh: line 15:  8880 Aborted                 (core dumped) mongod --dbpath /home/runner/workspace/data/db --bind_ip 127.0.0.1 --port 27017
+Waiting... attempt 2
+Waiting... attempt 3
+Waiting... attempt 4
+Waiting... attempt 5
+Waiting... attempt 6
+Waiting... attempt 7
+Waiting... attempt 8
+Waiting... attempt 9
+Waiting... attempt 10
+Waiting... attempt 11
+Waiting... attempt 12
+Waiting... attempt 13
+Waiting... attempt 14
+Waiting... attempt 15
+Waiting... attempt 16
+Waiting... attempt 17
+Waiting... attempt 18
+Waiting... attempt 19
+Waiting... attempt 20
+Waiting... attempt 21
+Waiting... attempt 22
+Waiting... attempt 23
+Waiting... attempt 24
+Waiting... attempt 25
+Waiting... attempt 26
+Waiting... attempt 27
+Waiting... attempt 28
+Waiting... attempt 29
+Waiting... attempt 30
+Backend started with PID 8978
+[Cluster] Primary 8978 is running
+[Cluster] Forking 4 application workers...
+[Worker 8990] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 8992] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 8990 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 8992 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 8991] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 8991 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 8993] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 8993 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9035] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9035 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9037] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9037 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9034] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9047] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9034 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9047 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9078] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9078 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9079] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9085] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9091] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9079 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9085 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9091 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9124] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9123] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9118] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9123 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9118 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9124 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9130] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9130 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9167] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9166] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9168] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9167 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9166 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9168 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9179] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9179 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9212] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9212 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9210] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9210 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9211] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9218] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9211 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9218 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9246] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9246 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9267] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9267 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9252] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9268] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9252 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9268 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9290] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9290 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9304] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9311] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9304 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9312] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9311 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9312 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9328] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9328 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9350] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9349] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9350 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9351] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9349 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9351 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9378] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9378 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9392] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9392 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9394] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9395] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9394 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9395 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9422] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9422 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9436] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9436 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9443] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9444] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9443 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9444 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9466] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9466 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9467] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9488] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9467 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9488 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9482] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9482 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9510] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9524] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9510 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9524 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9525] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9527] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9525 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9527 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9558] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9558 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9559] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9559 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9575] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9575 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9576] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9576 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9596] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9604] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9604 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9596 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9628] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9618] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9628 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9618 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9642] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9642 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9643] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9643 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9665] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9664] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9665 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9664 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9682] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9682 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9691] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9691 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9708] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9708 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9713] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9713 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9724] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9724 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9739] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9739 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9747] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9747 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9763] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9763 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9768] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9783] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9768 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9783 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9791] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9791 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9810] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9810 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9812] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9812 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9818] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9818 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9836] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9836 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9854] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9854 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9855] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9867] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9855 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9867 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9888] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9888 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9900] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9900 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9899] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9898] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9898 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9899 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9937] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9936] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9937 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9936 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9943] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9943 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9949] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9949 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9982] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9982 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9976] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 9977] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9976 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 9977 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 9999] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 9999 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10026] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 10025] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10025 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10020] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10026 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 10020 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10042] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10042 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10065] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10065 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10064] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10064 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10070] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10070 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10087] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10087 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10107] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10107 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10109] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 10115] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10109 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 10115 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10133] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10133 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10151] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 10153] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10151 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 10153 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10159] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10159 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10181] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10181 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10197] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10197 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10196] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10196 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10214] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 10236] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10214 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 10236 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10237] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10237 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10243] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10243 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+
+> client@0.0.0 dev
+> vite
+
+[1G[0K[Worker 10279] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 10273] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 10278] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10279 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 10273 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 10278 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10296] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10296 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10323] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10323 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10324] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 10325] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10325 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10337] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10324 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 10337 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10377] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10377 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10378] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10378 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10384] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10384 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10395] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10395 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10422] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Worker 10417] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10422 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Cluster] Worker 10417 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10428] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10428 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10436] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10436 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mExpected identifier but found "<<"[0m
+
+    vite.config.js:8:0:
+[37m      8 │ [32m<<[37m<<<<< HEAD
+        ╵ [32m~~[0m
+
+[31mfailed to load config from /home/runner/workspace/client/vite.config.js[39m
+[31merror when starting dev server:
+Error: Build failed with 1 error:
+vite.config.js:8:0: ERROR: Expected identifier but found "<<"
+    at failureErrorWithLog (/home/runner/workspace/client/node_modules/esbuild/lib/main.js:1467:15)
+    at /home/runner/workspace/client/node_modules/esbuild/lib/main.js:926:25
+    at runOnEndCallbacks (/home/runner/workspace/client/node_modules/esbuild/lib/main.js:1307:45)
+    at buildResponseToResult (/home/runner/workspace/client/node_modules/esbuild/lib/main.js:924:7)
+    at /home/runner/workspace/client/node_modules/esbuild/lib/main.js:951:16
+    at responseCallbacks.<computed> (/home/runner/workspace/client/node_modules/esbuild/lib/main.js:603:9)
+    at handleIncomingPacket (/home/runner/workspace/client/node_modules/esbuild/lib/main.js:658:12)
+    at Socket.readFromStdout (/home/runner/workspace/client/node_modules/esbuild/lib/main.js:581:7)
+    at Socket.emit (node:events:524:28)
+    at addChunk (node:internal/streams/readable:561:12)[39m
+[Worker 10456] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[1G[0K⠙[1G[0K[Cluster] Worker 10456 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
+[Worker 10457] Failed to start: SyntaxError: Unexpected token '<<'
+[90m    at compileSourceTextModule (node:internal/modules/esm/utils:346:16)[39m
+[90m    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)[39m
+[90m    at #translate (node:internal/modules/esm/loader:497:12)[39m
+[90m    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)[39m
+[90m    at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)[39m
+[Cluster] Worker 10457 died with code: 1, and signal: null
+[Cluster] Starting a new worker...
